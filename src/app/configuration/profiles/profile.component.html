@@ -1,0 +1,81 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <mat-card fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card-header>
+      <mat-card-title>Nuevo perfil</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayoutWrap="wrap" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-between center">
+        <div fxLayoutWrap="wrap" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayout="row" fxLayout.sm="column"
+          fxLayout.xs="column" fxLayoutAlign="start start">
+          <div fxFlex.gt-sm="45" fxFlex.gt-xs="100" fxFlex="45" fxLayoutAlign="space-between center">
+            <mat-form-field>
+              <input matInput placeholder="Nombre" [(ngModel)]="profile.name" [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+          </div>
+          <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column"
+            fxLayoutAlign="space-between center">
+            <div fxFlex.gt-sm="45" fxFlex.gt-xs="100" fxFlex="45" fxLayoutAlign="center center">
+              <mat-form-field>
+                <textarea matInput placeholder="Descripción" [(ngModel)]="profile.description" [ngModelOptions]="{standalone: true}"></textarea>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-sm="45" fxFlex.gt-xs="100" fxFlex="45" fxLayoutAlign="end center">
+              <button style="margin: 0px 10px 0px 0" (click)="backPage()" mat-raised-button color="primary">Volver</button>
+              <button *ngIf="!profile.id" mat-raised-button color="primary" (click)="createProfile()">Crear
+                perfil</button>
+
+            </div>
+          </div>
+        </div>
+        <div *ngIf="profile.id" fxLayoutWrap="wrap" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayout="row"
+          fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around stretch">
+          <div fxLayoutWrap="wrap" fxFlex.gt-sm="45" fxFlex.gt-xs="100" fxFlex="40" fxLayoutAlign="space-between stretch">
+            <mat-card class="card-roles">
+              <mat-card-header>
+                <mat-card-title>Roles</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="rol-content" *ngIf="profile && profile.roles && profile.roles.available">
+                  <div *ngFor="let roles of profile.roles.available">
+                    <span class="rol-content-title">{{roles.name}}</span>
+                    <button mat-menu-item (click)="assignRol(role)" *ngFor="let role of roles.roles">
+                      <i class="material-icons">label_important</i>
+                      <span>{{role.name}}</span>
+                    </button>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div fxLayoutWrap="wrap" fxFlex.gt-sm="10" fxFlex.gt-xs="100" fxFlex="10" fxLayoutAlign="center center">
+            <i class="material-icons">compare_arrows</i>
+          </div>
+          <div fxLayoutWrap="wrap" fxFlex.gt-sm="45" fxFlex.gt-xs="100" fxFlex="40" fxLayoutAlign="space-between stretch">
+            <mat-card class="card-roles">
+              <mat-card-header>
+                <mat-card-title>Roles asignados</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="rol-content" *ngIf="profile && profile.roles && profile.roles.assigned">
+                  <div title="{{roles.name}}" *ngFor="let roles of profile.roles.assigned">
+                    <span class="rol-content-title">{{roles.name}}</span>
+                    <button mat-menu-item (click)="unassignRol(role)" *ngFor="let role of roles.roles">
+                      <i class="material-icons">label_important</i>
+                      <span>{{role.name}}</span>
+                    </button>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <div *ngIf="profile.id" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end center"
+          fxLayoutGap="10px">
+          <button mat-raised-button color="warn" (click)="deleteProfile()">Eliminar</button>
+          <button mat-raised-button color="primary" (click)="updateProfile()">Actualizar
+            perfil</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

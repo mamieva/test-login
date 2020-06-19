@@ -1,0 +1,494 @@
+<!-- ============================================================== -->
+<!-- Simple four boxes Row -->
+<!-- ============================================================== -->
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- column -->
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <mat-card-content>
+        <!-- Row -->
+        <h4>Registro de Defunción</h4>
+        <!-- <button mat-raised-button color="primary" (click)="isLinear = !isLinear" id="toggle-linear">
+          {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+        </button> -->
+        <mat-horizontal-stepper [linear]="isLinear" #stepper>
+          <mat-step [stepControl]="firstFormGroup">
+
+            <form [formGroup]="firstFormGroup">
+              <ng-template matStepLabel>Acta</ng-template>
+
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Acta</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+                    <input matInput type="number" placeholder="Nº Tomo" [(ngModel)]="acta.volume.volumeNumber" formControlName="volumeNumber"
+                      required>
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+                    <input matInput type="number" placeholder="Nº Folio" [(ngModel)]="acta.folioNumber" formControlName="folioNumber" required>
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+                    <input matInput type="number" placeholder="Nº Acta" [(ngModel)]="acta.certificateNumber" formControlName="certificateNumber"
+                      required>
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+                    <input matInput type="number" placeholder="Año" min="1900" max="2020" [(ngModel)]="acta.year" formControlName="year" required>
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                    <mat-select placeholder="Seccional" [(ngModel)]="acta.office.id" formControlName="officeId" required>
+                      <mat-option *ngFor="let sec of offices" [value]="sec.id">
+                        {{ sec.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <!-- <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                    <mat-select placeholder="Apellido y Nombre del Oficial Público" [(ngModel)]="acta.operatorSign" formControlName="operatorSignId"
+                      required>
+                      <mat-option *ngFor="let sec of operatorsSign" [value]="sec.id">
+                        {{ sec.person.lastName + ', ' + sec.person.firstName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field> -->
+                  <mat-form-field class="example-full-width">
+                    <input type="text" placeholder="Apellido y Nombre del Oficial Público" aria-label="Number" matInput [(ngModel)]="acta.operatorSign"
+                      formControlName="operatorSignId" [formControl]="OperatorCtrl" [matAutocomplete]="auto">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{ option.person.lastName + ', ' + option.person.firstName }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                  <!-- <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                    <input matInput type="text" placeholder="Apellido y Nombre del Oficial Público" [(ngModel)]="acta.operatorId" formControlName="year"
+                      required>
+                  </mat-form-field> -->
+                </div>
+              </mat-expansion-panel>
+
+              <!-- <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Nuevo Operador</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+
+                </div>
+              </mat-expansion-panel> -->
+              <div style="text-align: right; margin:20px 0 0 0;">
+                <button mat-raised-button color="primary" (click)="createActa(stepper,bloquearActa)">Siguiente</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+              <ng-template matStepLabel>Datos de la Defunción</ng-template>
+
+              <!-- <mat-accordion> -->
+
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Difunto</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <span fxFlex.gt-sm="15" fxFlex.gt-xs="15" fxFlex="x15">
+                    <b>Buscar Persona</b>
+                  </span>
+                  <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                    <input matInput placeholder="Nº Documento" [(ngModel)]="personDifunto.docNumber" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center" [(ngModel)]="personDifunto.sex"
+                    [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+
+                  <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="findDifunto()">Buscar</button>
+                </div>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <!-- <mat-checkbox #foreignFat value="true" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">Extranjero</mat-checkbox> -->
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Pais de Nacimiento" [(ngModel)]="difunto.person.nationality" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                </div>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Apellido/s" [(ngModel)]="difunto.person.lastName" required [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Nombre/s" [(ngModel)]="difunto.person.firstName" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Tipo de Documento" [(ngModel)]="father.person.documentType" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field> -->
+
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <mat-select placeholder="Tipo de Documento" [ngModelOptions]="{standalone: true}" [(ngModel)]="difunto.person.docType.code">
+                      <mat-option *ngFor="let doc of documentTypes" [value]="doc.code">
+                        {{ doc.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Documento" [(ngModel)]="difunto.person.docNumber" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="date" placeholder="Fecha de Nacimiento" [(ngModel)]="difunto.person.birth.birthDay" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <div fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45" fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput type="number" placeholder="Edad" [(ngModel)]="difunto.person.age" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+  
+                    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <mat-select placeholder="Tipo de Edad" [ngModelOptions]="{standalone: true}" [(ngModel)]="difunto.person.ageType.code">
+                        <mat-option *ngFor="let doc of ageTypes" [value]="doc.code">
+                          {{ doc.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="text" placeholder="Profesión" [(ngModel)]="difunto.person.profession" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="text" placeholder="Enrolado en" [(ngModel)]="difunto.person.birth.address.addressLine" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="text" placeholder="Domicilio" [(ngModel)]="difunto.person.address.addressLine" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <mat-select placeholder="Estado Civil" [ngModelOptions]="{standalone: true}" [(ngModel)]="difunto.person.civilStatus">
+                      <mat-option *ngFor="let doc of civilStatus" [value]="doc">
+                        {{ doc.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center" [(ngModel)]="difunto.person.sex"
+                    [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Datos del Certificado</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="date" placeholder="Fecha de Inscripción de Defunción" [(ngModel)]="difunto.person.death.deathDayInscription"
+                      required [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Ocurrida en" [(ngModel)]="difunto.person.death.address.addressLine" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Causa de Defunción" [(ngModel)]="difunto.person.death.deathCause" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Tipo de Documento" [(ngModel)]="mother.person.documentType" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field> -->
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Certificado expedido por" [(ngModel)]="difunto.person.death.deathCertificate" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field> -->
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input type="text" matInput placeholder="Segun certificado de" [(ngModel)]="difunto.person.death.deathNameDoctor" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input type="text" matInput placeholder="Matricula" [(ngModel)]="difunto.person.death.deathRegistrationDoctor" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="time" placeholder="Hora de Defunción" [(ngModel)]="difunto.person.death.deathHour" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput required type="date" placeholder="Fecha de Defunción" [(ngModel)]="difunto.person.death.deathDay" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                </div>
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Hijo De</strong>
+                </mat-expansion-panel-header>
+
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Apellido del Padre" [(ngModel)]="father.person.lastName" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Nombre del Padre" [(ngModel)]="father.person.firstName" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Apellido de la Madre" [(ngModel)]="mother.person.lastName" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Nombre de la Madre" [(ngModel)]="mother.person.firstName" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                </div>
+              </mat-expansion-panel>
+
+              <!-- </mat-accordion> -->
+              <div style="text-align: right; margin:20px 0 0 0;">
+                <button mat-raised-button color="primary" matStepperPrevious>Atras</button>
+                <button mat-raised-button color="primary" (click)="updateProcedure(stepper)">Siguiente</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="thirdFormGroup">
+            <form [formGroup]="thirdFormGroup">
+              <ng-template matStepLabel>Declarante</ng-template>
+
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Declarante</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <span fxFlex.gt-sm="15" fxFlex.gt-xs="15" fxFlex="15">
+                    <b>Buscar Persona</b>
+                  </span>
+                  <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                    <input matInput placeholder="Nº Documento" [(ngModel)]="personDeclarante.docNumber" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center" [(ngModel)]="personDeclarante.sex"
+                    [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+
+                  <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="findDeclarante()">Buscar</button>
+                </div>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-checkbox #foreignDec value="true" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">Extranjero</mat-checkbox>
+                  <mat-form-field *ngIf="foreignDec.checked" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Pais de Nacimiento" [(ngModel)]="declarante.person.nationality" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                </div>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Apellido/s" [(ngModel)]="declarante.person.lastName" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Nombre/s" [(ngModel)]="declarante.person.firstName" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Tipo de Documento" [(ngModel)]="declarante.person.documentType" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field> -->
+
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <mat-select placeholder="Tipo de Documento" [ngModelOptions]="{standalone: true}" [(ngModel)]="declarante.person.docType.code">
+                      <mat-option *ngFor="let doc of documentTypes" [value]="doc.code">
+                        {{ doc.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Documento" [(ngModel)]="declarante.person.docNumber" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="date" placeholder="Fecha de Nacimiento" [(ngModel)]="declarante.person.birth.birthDay" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center" [(ngModel)]="declarante.person.sex"
+                    [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Género" [(ngModel)]="declarante.person.sex" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field> -->
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Obra en virtud de" [(ngModel)]="declarante.actorType.relationship.code" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field> -->
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <mat-select placeholder="Obra en virtud de" [ngModelOptions]="{standalone: true}" [(ngModel)]="declarante.actorType.relationship.code">
+                      <mat-option *ngFor="let doc of relationships" [value]="doc.code">
+                        {{ doc.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field> -->
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Domicilio" [(ngModel)]="declarante.person.address.addressLine" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+
+                </div>
+
+              </mat-expansion-panel>
+              <div style="text-align: right;margin:20px 0 0 0;">
+                <button mat-raised-button color="primary" matStepperPrevious>Atras</button>
+                <button mat-raised-button color="primary" (click)="updateProcedure(stepper)">Siguiente</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="fifthFormGroup">
+            <form [formGroup]="fifthFormGroup">
+              <ng-template matStepLabel>Marginales</ng-template>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Marginales</strong>
+                </mat-expansion-panel-header>
+                <!-- <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start"> -->
+
+                <div class="marginales" fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-radio-group fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="50" #editarPersonas [(ngModel)]="editarPersona" [ngModelOptions]="{standalone: true}"
+                    fxLayoutAlign="space-between start">
+                    <span>¿Editar alguna Persona de este Acta?</span>
+                    <mat-radio-button value="SI">Si</mat-radio-button>
+                    <mat-radio-button value="NO">No</mat-radio-button>
+                  </mat-radio-group>
+
+                  <mat-form-field *ngIf="editarPersona == 'SI'" fxFlex.gt-sm="80" fxFlex.gt-xs="80" fxFlex="80" style="margin-top: 10px">
+                    <mat-select placeholder="Persona sobre la que se realizan cambios" [(ngModel)]="actorType.code" (change)="selectActorType()"
+                      [ngModelOptions]="{standalone: true}">
+                      <mat-option *ngFor="let sec of actorTypes" [value]="sec.code">
+                        {{ sec.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <div *ngIf="editarPersona == 'SI' && editActorType.person " fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start"
+                    style="margin-top:15px">
+                    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Apellido/s" [(ngModel)]="editActorType.person.lastName" required [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Nombre/s" [(ngModel)]="editActorType.person.firstName" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <mat-select placeholder="Tipo de Documento" [ngModelOptions]="{standalone: true}" [(ngModel)]="editActorType.person.docType.code">
+                        <mat-option *ngFor="let doc of documentTypes" [value]="doc.code">
+                          {{ doc.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Tipo de Documento" [(ngModel)]="mother.person.documentType" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field> -->
+                    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Documento" [(ngModel)]="editActorType.person.docNumber" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput type="date" placeholder="Fecha de Nacimiento" [(ngModel)]="editActorType.person.birth.birthDay" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                    <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Género" [(ngModel)]="mother.person.sex" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field> -->
+                    <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center" [(ngModel)]="editActorType.person.sex"
+                      [ngModelOptions]="{standalone: true}">
+                      <mat-radio-button value="M">Masculino</mat-radio-button>
+                      <mat-radio-button value="F">Femenino</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                  <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="margin-top: 10px; display: block;">
+                    <textarea matInput placeholder="Marginal" rows="5" [(ngModel)]="margin.sentence" [ngModelOptions]="{standalone: true}" #marginal></textarea>
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="date" placeholder="Fecha Marginal" [(ngModel)]="margin.date" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <div fxFlex.gt-sm="80" fxFlex.gt-xs="80" fxFlex="80">
+                    <button mat-raised-button fxFlex.gt-sm="25" fxFlex.gt-xs="25" fxFlex="25" color="primary" matTooltipPosition="above" matTooltip="Adjuntar Documento!"
+                      (click)="addMarginFile()">
+                      <mat-icon style="color:white;">attach_file
+                      </mat-icon>Adjuntar Archivo</button>
+
+                    <span id="filesText" fxFlex.gt-sm="65" fxFlex.gt-xs="65" fxFlex="65" style="font-size: 12px;"></span>
+                  </div>
+                  <!-- <sup style="font-size: 10px;font-weight: bold;">{{'('+element.fileCount+')'}}</sup> -->
+
+                  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="text-align: right;">
+                    <input [id]="'file-input'" type="file" name="name" multiple style="display: none;" (change)="uploadFiles($event)" />
+                    <button *ngIf="margin.id" mat-raised-button color="primary" (click)="cancelarMargin()">Cancelar</button>
+                    <button mat-raised-button color="primary" (click)="addMargin()">{{margin.id ? 'Guardar Cambios': 'Agregar Marginal'}}</button>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+
+              <div class="example-container">
+                <mat-table #table [dataSource]="dataSource">
+
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="sentence">
+                    <mat-header-cell *matHeaderCellDef> Marginal </mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="margin-right: 10px"> {{element.sentence}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="date">
+                    <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.date | date: 'dd/MM/yyyy'}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.status == 'ACT' ? 'ACTIVO' : 'DE BAJA'}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index">
+                      <mat-icon matTooltip="Editar!" matTooltipPosition="above" (click)="editMargin(element,i)" style="color:#72d487;cursor:pointer">edit
+                      </mat-icon>
+                      <mat-icon matTooltip="Eliminar!" matTooltipPosition="above" (click)="deleteMargin(element,i)" style="color:#ff6868;cursor:pointer">delete_forever
+                      </mat-icon>
+                      <mat-icon *ngIf="element.documents.length > 0" matTooltip="Tiene Documentos Adjuntos!" matTooltipPosition="above" (click)="addMarginFile(element,i)"
+                        style="color:#5645eec5;cursor:pointer">attach_file
+                      </mat-icon>
+                      <!-- <mat-icon matTooltip="Adjuntar Documento!" matTooltipPosition="above" (click)="addMarginFile(element,i)" style="color:#5645eec5;cursor:pointer">attach_file
+                      </mat-icon>
+                      <sup style="font-size: 10px;font-weight: bold;">{{'('+element.fileCount+')'}}</sup>
+                      <input [id]="'file-input' + i" type="file" name="name" multiple style="display: none;" (change)="uploadFiles($event,element.id,i)"
+                      /> -->
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"></mat-row>
+                </mat-table>
+              </div>
+
+              <div style="text-align: right;margin:20px 0 0 0;">
+                <button mat-raised-button color="primary" matStepperPrevious>Atras</button>
+                <button mat-raised-button color="primary" (click)="updateProcedure(stepper)">Siguiente</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="sixthFormGroup">
+            <form [formGroup]="sixthFormGroup" fxLayoutWrap="wrap" fxLayout="row">
+              <ng-template matStepLabel>Archivos Adjuntos</ng-template>
+              <!-- <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100"> -->
+              <input name="file" type="file" class="inputfile" (change)="uploadFilesActa($event)" />
+              <!-- </mat-form-field> -->
+              <div class="example-container" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <mat-table #tableActa [dataSource]="dataActasFiles" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="Archivo">
+                    <mat-header-cell *matHeaderCellDef> Archivo </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="Acciones">
+                    <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index">
+                      <mat-icon matTooltip="Eliminar!" matTooltipPosition="above" (click)="deleteFileActa(element,i)" style="color:#ff6868;cursor:pointer">delete_forever
+                      </mat-icon>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="displayColumnActa"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayColumnActa;let i = index;"></mat-row>
+                </mat-table>
+              </div>
+              <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="margin-top: 25px; display: block;font-size: 14px;">
+                <textarea matInput placeholder="Observaciones" rows="5" [(ngModel)]="observations.observation" [ngModelOptions]="{standalone: true}"
+                  #marginal></textarea>
+              </mat-form-field>
+
+              <div style="text-align: right;margin:20px 0 0 0;" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <button mat-raised-button color="primary" matStepperPrevious>Atras</button>
+                <button mat-raised-button color="primary" matStepperReset (click)="resetStepper(stepper)">Limpiar</button>
+                <button mat-raised-button color="primary" matStepperReset (click)="finalizarTramite()">Finalizar</button>
+              </div>
+            </form>
+          </mat-step>
+        </mat-horizontal-stepper>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- column -->
+</div>

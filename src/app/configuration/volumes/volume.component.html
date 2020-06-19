@@ -1,0 +1,125 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="model.id">
+    <mat-card *ngIf="model.id">
+      <mat-card-content>
+        <div fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+          <span style="display: block;width:100%;">
+            <b>Tomo Nº: </b> {{' ' + model.volumeNumber + ' - ' + model.certificateType.name}}
+          </span>
+          <span *ngIf="model.year" style="display: block;width:100%;">
+            <b>Año: </b> {{' ' + model.year}}
+          </span>
+          <span *ngIf="model.volumeType" style="display: block;width:100%;">
+            <b>Tipo de Tomo: </b> {{' ' + model.volumeType.name}}
+          </span>
+          <span *ngIf="model.quantityFolioAvailable" style="display: block;width:100%;">
+            <b>Folios disponibles </b> {{' ' + model.quantityFolioAvailable}}
+          </span>
+          <span style="display: block;width:100%;">
+            <b>Estado: </b> {{' ' + model.statusLabel}}
+          </span>
+          <!-- <ng-container *ngFor="let version of model.versions">
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Editado por: </b> {{' ' + version.modifiedBy + ' - ' }}{{version.dateModified|date: 'dd/MM/yyyy
+              HH:mm:ss'}}
+            </span>
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Versión: </b> {{' ' + version.id}}
+            </span>
+          </ng-container> -->
+        </div>
+        <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" fxLayoutAlign="center center" fxLayoutWrap="wrap">
+
+          <button *ngIf="model.status != 'CLOSED' && model.status !='CLOSE_OPER'" fxFlex.gt-sm="100" fxFlex.gt-xs="100"
+            fxFlex="100" mat-raised-button color="primary" (click)="closedVolume()" style="margin-top:10px">
+            Cerrar Tomo
+          </button>
+          <button *ngIf="(model.status == 'CLOSED' || model.status == 'CLOSE_OPER') && !model.certificateCloseVolumePdfBase64"
+            fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" mat-stroked-button color="primary" (click)="printPdf()"
+            style="margin-top:10px">
+            Descargar Documentos
+          </button>
+          <button fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" (click)="backPage()" style="margin-top:10px"
+            mat-raised-button color="primary">Volver</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="(model.status == 'CLOSED' || model.status == 'CLOSE_OPER') && (model.indexVolume || model.certificateCloseVolume || model.certificateCloseYear || model.certificateOpenVolume || model.certificateOpenYear)">
+      <mat-card-content fxLayoutWrap="wrap" fxLayoutAlign="space-evenly start">
+        <button *ngIf="(model.status == 'CLOSED' || model.status == 'CLOSE_OPER') && model.indexVolume" fxFlex.gt-sm="30"
+          fxFlex.gt-xs="30" fxFlex="30" mat-stroked-button color="primary" (click)="previewPDF('indexVolume')" style="margin-top:10px">
+          Previsualizar Indice del Tomo
+        </button>
+        <button *ngIf="(model.status == 'CLOSED' || model.status == 'CLOSE_OPER') && model.certificateCloseVolume"
+          fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" mat-stroked-button color="primary" (click)="previewPDF('certificateCloseVolume')"
+          style="margin-top:10px">
+          Previsualizar Cierre del Tomo
+        </button>
+        <button *ngIf="(model.status == 'CLOSED' || model.status == 'CLOSE_OPER') && model.certificateCloseYear"
+          fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" mat-stroked-button color="primary" (click)="previewPDF('certificateCloseYear')"
+          style="margin-top:10px">
+          Previsualizar Cierre Anual
+        </button>
+        <button *ngIf="(model.status == 'CLOSED' || model.status == 'CLOSE_OPER') && model.certificateOpenVolume"
+          fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" mat-stroked-button color="primary" (click)="previewPDF('certificateOpenVolume')"
+          style="margin-top:10px">
+          Previsualizar Apertura
+        </button>
+        <button *ngIf="(model.status == 'CLOSED' || model.status == 'CLOSE_OPER') && model.certificateOpenYear"
+          fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" mat-stroked-button color="primary" (click)="previewPDF('certificateOpenYear')"
+          style="margin-top:10px">
+          Previsualizar Apertura Anual
+        </button>
+
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="volumeId && (model.openedDate || model.closedDate)">
+      <mat-card-content>
+        <div *ngIf="model.openedDate" fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+          <span style="display: block;width:100%;">
+            <b>Fecha de Apertura: </b> {{model.openedDate | date: 'dd/MM/yyyy HH:mm:ss'}}
+          </span>
+          <span *ngIf="model.closedDate" style="display: block;width:100%;">
+            <b>Fecha de Cierre: </b> {{model.closedDate | date: 'dd/MM/yyyy HH:mm:ss'}}
+          </span>
+          <!-- <ng-container *ngFor="let version of model.versions">
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Editado por: </b> {{' ' + version.modifiedBy + ' - ' }}{{version.dateModified|date: 'dd/MM/yyyy
+              HH:mm:ss'}}
+            </span>
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Versión: </b> {{' ' + version.id}}
+            </span>
+          </ng-container> -->
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="model.certificateByStatus.length > 0">
+      <mat-card-content fxLayout="row" fxLayoutWrap="wrap">
+        <div fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+          <span style="display: block;width:100%;margin-bottom: 10px;">
+            <b>Actas</b>
+          </span>
+          <ng-container *ngFor="let item of model.certificateByStatus">
+            <span style="display: block;width:100%;">
+              <b>{{item.statusLabel}} :</b> {{item.quantity}}
+            </span>
+          </ng-container>
+          <!-- <ng-container *ngFor="let version of model.versions">
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Editado por: </b> {{' ' + version.modifiedBy + ' - ' }}{{version.dateModified|date: 'dd/MM/yyyy
+              HH:mm:ss'}}
+            </span>
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Versión: </b> {{' ' + version.id}}
+            </span>
+          </ng-container> -->
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div id="pdfCertificate" style="min-height:300px">
+      <app-image-viewer *ngIf="pdfCertificate && pdfCertificate.base64" [images]="[pdfCertificate.base64]"
+        [idContainer]="'idOnHTML2'" [loadOnInit]="true"></app-image-viewer>
+    </div>
+  </div>
+</div>

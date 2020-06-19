@@ -1,0 +1,389 @@
+<!-- ============================================================== -->
+<!-- Simple four boxes Row -->
+<!-- ============================================================== -->
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- column -->
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="model.id">
+    <mat-card>
+      <mat-card-content fxLayoutAlign="end center">
+        <!-- Row -->
+        <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+
+          <div fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+            <span style="display:block">
+              <h4>Acta Nº
+                <b>{{model.certificateNumber}}</b>
+              </h4>
+            </span>
+            <span style="display:block">
+              <h5>
+                <b>Tipo de Acta :</b> {{model.certificateTypeName}} - <b>Estado :</b> {{model.statusLabel}} </h5>
+            </span>
+            <!-- <span style="display:block">
+              <h6>
+                <b>Estado :</b> {{model.statusLabel}} </h6>
+            </span> -->
+          </div>
+          <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" fxLayout="row" fxLayoutWrap="wrap">
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="space-between center">
+              <button fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="model.enabledDownload" (click)="btnDescargar()"
+                mat-stroked-button color="primary">Previsualizar Acta</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="model.taken.isTaken">
+
+        </div> -->
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-content fxLayoutAlign="start center">
+        <!-- Row -->
+        <div fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+          <span style="display: block; margin-bottom:10px">
+            <b>Datos del Acta</b>
+          </span>
+          <span style="display: block">
+            <b>Nº Folio:</b> {{model.folioNumber}}
+          </span>
+          <span style="display: block">
+            <b>Nº Tomo: </b> {{model.volume.volumeNumber}}
+          </span>
+          <span style="display: block">
+            <b>Año: </b> {{model.year}}
+          </span>
+          <span style="display: block">
+            <b>Oficina: </b> {{model.office.code + ' - ' + model.office.name}}
+          </span>
+          <span *ngIf="model.observation" style="display: block">
+            <b>Observaciones:</b> {{model.observation}}
+          </span>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="model.status == 'BLOCKED' && model.replacementCertificate" >
+      <mat-card-content fxLayoutAlign="start center">
+        <!-- Row -->
+        <div fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+          <span style="display: block; margin-bottom:10px">
+            <b>Datos del Acta Bloqueante</b>
+          </span>
+          <span style="display: block">
+            <b>Nº Acta:</b> {{model.replacementCertificate.certificateNumber}}
+          </span>
+          <span style="display: block">
+            <b>Nº Folio:</b> {{model.replacementCertificate.folioNumber}}
+          </span>
+          <span style="display: block">
+            <b>Nº Tomo: </b> {{model.replacementCertificate.volume.volumeNumber}}
+          </span>
+          <span style="display: block">
+            <b>Año: </b> {{model.replacementCertificate.year}}
+          </span>
+          <span style="display: block">
+            <b>Oficina: </b> {{model.replacementCertificate.office.code + ' - ' +
+            model.replacementCertificate.office.name}}
+          </span>
+          <span *ngIf="model.replacementCertificate.observation" style="display: block">
+            <b>Observaciones:</b> {{model.replacementCertificate.observation}}
+          </span>
+
+        </div>
+
+        <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" fxLayoutAlign="space-between center">
+          <button fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" (click)="goToInfo(model.replacementCertificate.id)"
+            mat-stroked-button color="primary">Ver Detalle del Acta</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="model.certificateFromRequest && model.certificateFromRequest.id">
+      <mat-card-content>
+        <div fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+          <span style="display:block">
+            Se Generó el Trámite de <b>{{model.certificateFromRequest.certificateTypeName}}</b> Nº <b>{{model.certificateFromRequest.id}}</b>
+          </span>
+          <span style="display:block"><b>{{model.certificateFromRequest.statusLabel}}</b>
+          </span>
+        </div>
+        <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" fxLayoutAlign="space-between center">
+          <button fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" (click)="goToInfo(model.certificateFromRequest.id)"
+            mat-stroked-button color="primary">Ver Detalle del Trámite</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="model.requestOrigin && model.requestOrigin.id">
+      <mat-card-content>
+        <div fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+          <span style="display:block">
+            <h4>Generado por la Solicitud Nº
+              <b>{{model.requestOrigin.id}}</b>
+            </h4>
+          </span>
+          <span style="display:block">
+            <h5>
+              <b>Tipo de Solicitud :</b> {{model.requestOrigin.certificateTypeName}} </h5>
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="model.status != 'BLOCKED' && model.people && model.people.length > 0">
+      <mat-card-content fxLayout="column">
+        <!-- Row -->
+        <span fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="display: block;">
+          <b>Personas Involucradas</b>
+        </span>
+        <mat-list fxFlex.gt-sm="90" fxFlex.gt-xs="90" fxFlex="90">
+          <ng-container style="display:block" *ngFor="let row of model.people">
+            <!-- <mat-list-item> -->
+            <div style="margin: 20px 0 10px 0">
+              <strong>{{row.actorType.name}} </strong> : {{row.person.lastName + ' ' + (row.person.secondLastName ?
+              row.person.secondLastName
+              : '') + ', ' + row.person.firstName}} - {{row.person.docType.name + ': ' +row.person.docNumber + ' - ' +
+              (row.person.sex == 'M' ? 'Masculino' : (row.person.sex == 'F' ? 'Femenino' : ''))}}
+              <ng-container *ngIf="model.certificateTypeCode == 'NACIMIENTO' && row.actorType.code == 'RECIEN_NACIDO'">
+
+                <span style="display: block; margin: 10px 0 10px 0; font-weight: bolder;">Datos del Nacimiento</span>
+                <span style="display: block;">
+                  <b>Fecha y Hora de Nacimiento:</b> {{(row.person.birth.birthDay | date: 'dd/MM/yyyy') + ' - ' +
+                  (row.person.birth.birthHour ? row.person.birth.birthHour : '')}}</span>
+                <span style="display: block;">
+                  <b>Datos del Profesional:</b> {{row.person.birth.birthNameDoctor + ' - ' +
+                  row.person.birth.birthRegistrationDoctor}}</span>
+                <span style="display: block;">
+                  <b>Ciudad:</b> {{row.person.birth.address.city.name + ' - ' +
+                  row.person.birth.address.city.department.name
+                  + ' - ' + row.person.birth.address.city.department.state.name}}</span>
+              </ng-container>
+
+              <ng-container *ngIf="row.person.death && row.person.death.deathDayInscription">
+                <span style="display: block; margin: 10px 0 10px 0; font-weight: bolder;">Datos del Fallecimiento</span>
+                <span style="display: block;">
+                  <b>Fecha de Defunción: </b>
+                  {{row.person.death.deathDay | date: 'dd/MM/yyyy'}}
+                </span>
+                <span style="display: block;">
+                  <b>Hora de Defunción: </b>{{row.person.death.deathHour}}
+                </span>
+                <span style="display: block;">
+                  <b>Causa de Defunción: </b>
+                  {{row.person.death.deathCause}}
+                </span>
+                <span style="display: block;">
+                  <b>Según Certificado de:</b>
+                  {{row.person.death.deathNameDoctor}}
+                </span>
+                <span style="display: block;">
+                  <b>Matricula: </b>
+                  {{row.person.death.deathRegistrationDoctor}}
+                </span>
+                <span style="display: block;">
+                  <b>Fecha de Inscripción de Defunción: </b>
+                  {{row.person.death.deathDayInscription | date: 'dd/MM/yyyy'}}
+                </span>
+              </ng-container>
+            </div>
+            <!-- </mat-list-item> -->
+            <mat-divider style="left:10px;width:90%;"></mat-divider>
+          </ng-container>
+        </mat-list>
+        <!-- <div class="infoImportante" *ngIf="model.certificateTypeCode == 'NACIMIENTO' && row.actorType.code == 'RECIEN_NACIDO'">
+
+          <span style="display: block; margin: 10px 0 10px 0">Datos del Nacimiento</span>
+          <span style="display: block;">
+            <b>Fecha y Hora de Nacimiento:</b> {{(row.person.birth.birthDay | date: 'dd/MM/yyyy') + ' - ' + row.person.birth.birthHour}}</span>
+          <span style="display: block;">
+            <b>Datos del Profesional</b>: {{row.person.birth.birthNameDoctor + '-' + row.person.birth.birthRegistrationDoctor}}</span>
+          <span style="display: block;">
+            <b>Ciudad:</b> {{row.person.birth.address.city.name + ' - ' + row.person.birth.address.city.department.name}}</span>
+        </div> -->
+      </mat-card-content>
+    </mat-card>
+    
+    <mat-card *ngIf="model.marginals.length > 0">
+        <mat-card-content fxLayout="column">
+          <span fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="display: block;">
+            <b>Marginales</b>
+          </span>
+          <mat-list fxFlex.gt-sm="90" fxFlex.gt-xs="90" fxFlex="90">
+            <ng-container style="display:block" *ngFor="let item of model.marginals; let i = index;">
+              <div style="margin: 20px 0 10px 0">
+                <span fxFlex.gt-sm="95" fxFlex.gt-xs="95" fxFlex="95">
+                  <b>Nro: {{item.id}} - {{item.date | date: 'dd/MM/yyyy' }} - </b> {{item.typeName}} - {{item.statusLabel}}
+                </span>
+              </div>
+              <mat-divider style="left:10px;width:90%;"></mat-divider>
+            </ng-container>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    <mat-card *ngIf="model.procedureMargin">
+      <mat-card-content fxLayout="row" fxLayoutWrap="wrap">
+        <!-- Row -->
+        <span fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="display: block; margin-bottom: 15px">
+          <b>Marginales</b>
+        </span>
+        <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="model.procedureMargin.label">
+          {{model.procedureMargin.label}}
+        </div>
+        <span fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70" *ngIf="model.procedureMargin.inProcess" style="display: block;font-weight:bolder; margin-top:15px; margin-bottom: 15px">
+          Tipo: <b>{{model.procedureMargin.inProcess.name}}</b>
+        </span>
+        <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" *ngIf="model.procedureMargin.inProcess" fxLayoutAlign="space-between center">
+          <button fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="true" (click)="retomarMargin(model.procedureMargin.inProcess.id)"
+            mat-stroked-button color="primary">Retomar</button>
+        </div>
+        <ng-container *ngFor="let ava of model.procedureMargin.availables">
+          <span fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70" style="display: block;font-weight:bolder; margin-top:15px; margin-bottom: 15px">
+            Tipo : <b>{{ava.name}}</b>
+          </span>
+          <div fxFlex.gt-sm="30" fxFlex.gt-xfs="30" fxFlex="30" fxLayoutAlign="space-between center">
+            <button fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="true" (click)="marginarActa(ava.code)"
+              mat-raised-button color="primary">Iniciar Marginal</button>
+          </div>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="model.observations">
+      <mat-card-content>
+        <!-- Row -->
+        <span style="display: block; margin-bottom: 15px">
+          <b>Observaciones</b>
+        </span>
+        <div>
+          {{model.observations}}
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="model.certificates && model.certificates.length > 0">
+      <mat-card-content fxLayout="column">
+        <span style="display: block; margin-bottom: 15px">
+          <b>Actas</b>
+        </span>
+        <!-- Row -->
+
+        <mat-table fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" #tableActa [dataSource]="certificates">
+          <!-- Name Column -->
+          <!-- <ng-container matColumnDef="Numero">
+            <mat-header-cell *matHeaderCellDef> Nº </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+          </ng-container> -->
+          <ng-container matColumnDef="Tipo">
+            <mat-header-cell *matHeaderCellDef> Tipo de Acta </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.certificateTypeCode}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Tomo">
+            <mat-header-cell *matHeaderCellDef> Nº Tomo </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.volume.volumeNumber}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Area">
+            <mat-header-cell *matHeaderCellDef> Nº Folio </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.folioNumber}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Etapa">
+            <mat-header-cell *matHeaderCellDef> Nº Acta </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.certificateNumber}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Estado">
+            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.statusLabel == 'DIGITIZED' ? 'Digitalizado' :
+              element.statusLabel}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Fecha">
+            <mat-header-cell *matHeaderCellDef> Año </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.year}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Actions">
+            <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+            <mat-cell *matCellDef="let element; let i = index">
+              <button [disabled]="disabledButton" *ngIf="btnDigitalizar(element)" mat-button (click)="digitalize(element,i)"
+                color="primary">Digitalizar</button>
+              <i *ngIf="model.tasks && model.tasks.current.code == 'DIGITIZE' && element.status == 'DIGITIZED'" class="material-icons"
+                style="font-size: 28px; color:green ">done_all</i>
+              <!-- <i *ngIf="model.tasks.current.code == 'APPROVED'  && pdfCertificate.pdfDraftBase64" class="material-icons" style="font-size: 28px; color:green ">cloud_download</i> -->
+              <button [disabled]="disabledButton" *ngIf="btnDescargar()" mat-button (click)="descargar(element)" color="primary">Descargar</button>
+              <button *ngIf="element.document && pdfCertificate && pdfCertificate.base64 && pdfCertificate.documentId == element.document.id"
+                (click)="firmar()" mat-button color="primary">Firmar</button>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayColumns;let i = index;let element"></mat-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="documents.length > 0">
+      <mat-card-content fxLayout="column">
+        <span>
+          Documentos Adjuntos
+        </span>
+        <div class="example-container">
+          <mat-table #table [dataSource]="dataSource">
+            <!-- Name Column -->
+            <ng-container matColumnDef="Archivo">
+              <mat-header-cell *matHeaderCellDef> Archivo </mat-header-cell>
+              <mat-cell *matCellDef="let element" style="margin-right: 10px"> {{element.documentType}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+              <mat-cell *matCellDef="let element; let i = index">
+                <!-- <mat-icon matTooltip="Editar!" matTooltipPosition="above" (click)="editMargin(element,i)" style="color:#72d487;cursor:pointer">edit
+                </mat-icon> -->
+                <!-- <mat-icon matTooltip="Eliminar!" matTooltipPosition="above" (click)="deleteFiles(element,'documents')" style="color:#ff6868;cursor:pointer">delete_forever
+                </mat-icon> -->
+                <mat-icon matTooltip="Descargar!" matTooltipPosition="above" (click)="downloadAdjunto(element)" style="color:#68e1ff;cursor:pointer">cloud_download
+                </mat-icon>
+                <!-- <mat-icon *ngIf="element.documents.length > 0" matTooltip="Tiene Documentos Adjuntos!" matTooltipPosition="above" (click)="addMarginFile(element,i)" style="color:#5645eec5;cursor:pointer">attach_file
+                  </mat-icon> -->
+                <!-- <sup style="font-size: 10px;font-weight: bold;">{{'('+element.fileCount+')'}}</sup>
+                  <input [id]="'file-input' + i" type="file" name="name" multiple style="display: none;" (change)="uploadFiles($event,element.id,i)"
+                  /> -->
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumnsCertificate"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsCertificate;let i = index;"></mat-row>
+          </mat-table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="documentsRequest.length > 0">
+      <mat-card-content fxLayout="column">
+        <span>
+          Documentos de la Solicitud
+        </span>
+        <div class="example-container">
+          <mat-table #table [dataSource]="dataSourceRequest">
+            <!-- Name Column -->
+            <ng-container matColumnDef="Archivo">
+              <mat-header-cell *matHeaderCellDef> Archivo </mat-header-cell>
+              <mat-cell *matCellDef="let element" style="margin-right: 10px"> {{element.documentType}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+              <mat-cell *matCellDef="let element; let i = index">
+                <!-- <mat-icon matTooltip="Editar!" matTooltipPosition="above" (click)="editMargin(element,i)" style="color:#72d487;cursor:pointer">edit
+                </mat-icon> -->
+                <!-- <mat-icon matTooltip="Eliminar!" matTooltipPosition="above" (click)="deleteFiles(element,'documentsRequest')" style="color:#ff6868;cursor:pointer">delete_forever
+                </mat-icon> -->
+                <mat-icon matTooltip="Descargar!" matTooltipPosition="above" (click)="downloadAdjunto(element)" style="color:#68e1ff;cursor:pointer">cloud_download
+                </mat-icon>
+                <!-- <mat-icon *ngIf="element.documents.length > 0" matTooltip="Tiene Documentos Adjuntos!" matTooltipPosition="above" (click)="addMarginFile(element,i)" style="color:#5645eec5;cursor:pointer">attach_file
+                  </mat-icon> -->
+                <!-- <sup style="font-size: 10px;font-weight: bold;">{{'('+element.fileCount+')'}}</sup>
+                  <input [id]="'file-input' + i" type="file" name="name" multiple style="display: none;" (change)="uploadFiles($event,element.id,i)"
+                  /> -->
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumnsRequest"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumnsRequest;let i = index;"></mat-row>
+          </mat-table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div id="pdfCertificate" style="min-height:300px">
+      <app-image-viewer *ngIf="pdfCertificate && pdfCertificate.base64" [images]="[pdfCertificate.base64]"
+        [idContainer]="'idOnHTML2'" [loadOnInit]="true"></app-image-viewer>
+    </div>
+  </div>
+  <!-- column -->
+</div>

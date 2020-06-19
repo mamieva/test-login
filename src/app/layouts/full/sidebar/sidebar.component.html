@@ -1,0 +1,58 @@
+<!-- ============================================================== -->
+<!-- sidebar -->
+<!-- ============================================================== -->
+<div fxLayout="row" fxLayoutWrap="wrap" class="user-profile" style="background: url(assets/images/imageUser.png) no-repeat;background-size:240px;">
+  <!-- User profile image -->
+  <!-- <div class="profile-img"> <img src="assets/images/users/profile.png" alt="user"> </div> -->
+  <div class="profile-img">
+    <img [src]="'data:image;base64,' + currentUser.photoBase64 | safeHtml" alt="user"> </div>
+  <!-- User profile text-->
+  <!-- ============================================================== -->
+  <!-- Profile - style you can find in header.scss -->
+  <!-- ============================================================== -->
+  <div class="profile-text">
+    <a [matMenuTriggerFor]="sdprofile" class=""> {{currentUser.lastName + ', ' + currentUser.firstName}}
+      <i class="ti-angle-down font-12 m-l-5"></i>
+    </a>
+  </div>
+  <mat-menu #sdprofile="matMenu" class="mymegamenu">
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon> Settings
+    </button>
+    <button mat-menu-item>
+      <mat-icon>account_box</mat-icon> Profile
+    </button>
+    <button mat-menu-item>
+      <mat-icon>notifications_off</mat-icon> Disable notifications
+    </button>
+    <button mat-menu-item>
+      <mat-icon>exit_to_app</mat-icon> Sign Out
+    </button>
+  </mat-menu>
+</div>
+<mat-nav-list appAccordion>
+  <mat-list-item appAccordionLink *ngFor="let menuitem of itemSidebar" routerLinkActive="selected" group="{{menuitem.state}}">
+    <a class="" appAccordionToggle [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link' && menuitem.state != 'logout' && menuitem.state != 'configuration'">
+      <mat-icon>{{ menuitem.icon }}</mat-icon>
+      <span>{{ menuitem.name }}</span>
+      <span fxFlex></span>
+      <span class="label label-{{ badge.type }} " *ngFor="let badge of menuitem.badge ">{{ badge.value }}</span>
+    </a>
+    <a class="" appAccordionToggle [routerLink]="['/pages/', menuitem.state]" *ngIf="menuitem.type === 'link' && menuitem.state == 'logout'">
+      <mat-icon>{{ menuitem.icon }}</mat-icon>
+      <span>{{ menuitem.name }}</span>
+      <span fxFlex></span>
+      <span class="label label-{{ badge.type }} " *ngFor="let badge of menuitem.badge ">{{ badge.value }}</span>
+    </a>
+    <a class="" appAccordionToggle [matMenuTriggerFor]="configuration" *ngIf="menuitem.type === 'link' && menuitem.state == 'configuration'">
+      <mat-icon>{{ menuitem.icon }}</mat-icon>
+      <span>{{ menuitem.name }}</span>
+    </a>
+    <mat-menu #configuration="matMenu" class="mymegamenu" yPosition="below" xPosition="after">
+      <button mat-menu-item (click)="goTo(badge.state)" *ngFor="let badge of menuitem.badge">
+        <mat-icon>{{ badge.icon }}</mat-icon>
+        <span>{{badge.name}}</span>
+      </button>
+    </mat-menu>
+  </mat-list-item>
+</mat-nav-list>

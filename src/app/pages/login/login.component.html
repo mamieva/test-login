@@ -1,0 +1,37 @@
+<div class="fullpage">
+  <div fxLayoutAlign="center center" fxLayout="row" fxLayoutWrap="wrap" fxFlex="40">
+    <mat-card-header fxFlex="100" fxFlexOffset="20">
+      <mat-card-title fxLayoutAlign="start center">
+        <h1>Bienvenido a Gmac</h1>
+      </mat-card-title>
+    </mat-card-header>
+    <form fxFlex="100" fxLayoutAlign="center center" fxLayout="row" fxLayoutWrap="wrap">
+      <mat-form-field class="login" fxFlex="60">
+        <mat-label>Correo Electronico</mat-label>
+        <input matInput name="user" [(ngModel)]="model.user">
+      </mat-form-field>
+
+      <mat-form-field fxFlex="60" class="login">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" name="pass" [(ngModel)]="model.password">
+      </mat-form-field>
+      <div fxFlex="100" fxFlexOffset="20">
+        <a class="button-label" href="#">¿Olvidaste tu password?</a>
+      </div>
+      <div fxFlex="100" fxLayoutAlign="center center">
+        <button fxFlex="60" (click)="login()" mat-flat-button color="primary">Ingresar</button>
+      </div>
+      <div class="register" fxFlex="100" fxFlexOffset="20">
+        <span class="button-label">
+          Crear una Cuenta
+        </span>
+      </div>
+      <div fxFlex="100" fxLayoutAlign="center center">
+        <button fxFlex="60" (click)="login()" mat-stroked-button color="primary">Registrarse</button>
+      </div>
+    </form>
+  </div>
+  <div fxFlex="60">
+    <div fxFlex="100" class="fondo-der"></div>
+  </div>
+</div>

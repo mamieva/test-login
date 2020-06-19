@@ -1,0 +1,155 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <mat-card fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+
+    <mat-card-content fxLayoutWrap="wrap" fxLayout="row" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+      <h4 style="display: block;">
+        {{operator.id ? 'Editar' : 'Crear'}} Operador
+      </h4>
+      <span *ngIf="!operator.id" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="margin-bottom:15px;">
+        <b>Buscar Persona</b>
+      </span>
+      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-evenly start"
+        *ngIf="!operator.id">
+        <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+          <input matInput placeholder="Nº Documento" [(ngModel)]="personOperator.docNumber" [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+        <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+          [(ngModel)]="personOperator.sex" [ngModelOptions]="{standalone: true}">
+          <mat-radio-button value="M">Masculino</mat-radio-button>
+          <mat-radio-button value="F">Femenino</mat-radio-button>
+        </mat-radio-group>
+
+        <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="findOperator()">{{'Buscar'}}</button>
+      </div>
+      <div *ngIf="personOperator.find && operator.person.id" fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="center center"
+        fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+          <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center">
+            <img style="height: 150px" *ngIf="operator.person.photoBase64" [src]="'data:image;base64,' + operator.person.photoBase64 | OperatorSafeHtml" />
+          </div>
+          <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40">
+            <div style="width:100%">
+              {{operator.person.lastName + ' ' + (operator.person.secondLastName ? operator.person.secondLastName : '')
+              +
+              ', ' + operator.person.firstName}}
+            </div>
+            <div style="width:100%">
+              {{operator.person.docType.name + ': ' + operator.person.docNumber}}
+            </div>
+            <div style="width:100%">
+              Fecha de Nacimiento: {{operator.person.birth.birthDay | date: 'dd/MM/yyyy'}}
+            </div>
+            <div style="width:100%">
+              {{operator.person.sex == 'M' ? 'Masculino':'Femenino'}}
+            </div>
+          </div>
+          <div fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" fxLayoutAlign="end start">
+            <button *ngIf="!operator.id" fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" mat-button style="margin: 10px 10px 0 0;"
+              (click)="closePerson('operator')"><i class="material-icons">
+                close
+              </i></button>
+          </div>
+        </mat-card>
+      </div>
+      <div *ngIf="personOperator.find && operator.person.id" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100"
+        fxLayout="row" fxLayoutAlign="space-evenly start" fxLayoutWrap="wrap">
+        <div *ngIf="operator.userName" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+          <mat-form-field>
+            <input disabled matInput type="text" placeholder="Usuario" [ngModelOptions]="{standalone: true}" [(ngModel)]="operator.userName"
+              required>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+          <mat-form-field>
+            <mat-select placeholder="Perfil" [ngModelOptions]="{standalone: true}" [(ngModel)]="operator.profile.id">
+              <mat-option *ngFor="let profile of profiles" [value]="profile.id">
+                {{ profile.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+          <mat-form-field>
+            <input matInput type="email" placeholder="Correo electrónico" [formControl]="email" [(ngModel)]="operator.email"
+              required>
+            <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+          <mat-slide-toggle [(ngModel)]="operator.active" *ngIf="operator.id" (ngModelChange)="activeOperator()">Estado</mat-slide-toggle>
+        </div>
+      </div>
+
+      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end center" fxLayoutGap="10px">
+        <button [disabled]="!operator.person.id" *ngIf="!operator.id" mat-raised-button color="warn" (click)="createOperator()">Crear Operador</button>
+        <button [disabled]="!operator.active" *ngIf="operator.id" mat-raised-button color="warn" (click)="deleteOperator()">Eliminar</button>
+        <button [disabled]="!operator.active" *ngIf="operator.id" [disabled]="!operator.email || email.invalid"
+        mat-raised-button color="primary" (click)="updateOperator()">Actualizar operador</button>
+        <button mat-raised-button color="primary" (click)="backPage()">Volver</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card *ngIf="operator.id && tasks && (tasks.available.length == 0 && tasks.assigned.length == 0)" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutWrap="wrap">
+    <mat-card-content fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutWrap="wrap">
+      El Operador no posee Trámites Asignados
+    </mat-card-content>
+  </mat-card>
+      <div *ngIf="operator.id && tasks && (tasks.available.length > 0 || tasks.assigned.length > 0)" fxLayoutWrap="wrap" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayout="row"
+        fxLayout.sm="column" fxLayout.xs="column" fxLayoutAlign="space-around stretch">
+        <div fxLayoutWrap="wrap" fxFlex.gt-sm="45" fxFlex.gt-xs="100" fxFlex="45" fxLayoutAlign="space-between start">
+          <mat-card class="card-roles">
+            <mat-card-header>
+              <mat-card-title>Permisos sobre Trámites</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="rol-content" *ngIf="tasks && tasks.available">
+                <div *ngFor="let tasks of tasks.available">
+                  <span class="rol-content-title">{{tasks.name}}</span>
+                  <button mat-menu-item [disabled]="!task.enabled || !operator.active" (click)="assignTask(task)"
+                    *ngFor="let task of tasks.task">
+                    <i class="material-icons">label_important</i>
+                    <span>{{task.name}}</span>
+                    <br>
+                    <i *ngIf="!task.enabled" class="material-icons">priority_high</i>
+                    <span *ngIf="!task.enabled" class="rol-content-label-description">{{task.labelEnabled}}</span>
+                  </button>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div fxLayoutWrap="wrap" fxFlex.gt-sm="10" fxFlex.gt-xs="100" fxFlex="10" fxLayoutAlign="center center">
+          <i class="material-icons">compare_arrows</i>
+        </div>
+        <div fxLayoutWrap="wrap" fxFlex.gt-sm="45" fxFlex.gt-xs="100" fxFlex="45" fxLayoutAlign="space-between stretch">
+          <mat-card class="card-roles">
+            <mat-card-header>
+              <mat-card-title>Permisos asignados</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="rol-content" *ngIf="tasks && tasks.assigned">
+                <div *ngFor="let tasks of tasks.assigned">
+                  <span class="rol-content-title">{{tasks.name}}</span>
+                  <button mat-menu-item [disabled]="!task.enabled || !operator.active" (click)="unassignTask(task)"
+                    *ngFor="let task of tasks.task">
+                    <i class="material-icons">label_important</i>
+                    <span>{{task.name}}</span>
+                    <br>
+                    <i *ngIf="!task.enabled" class="material-icons">priority_high</i>
+                    <span *ngIf="!task.enabled" class="rol-content-label-description">{{task.labelEnabled}}</span>
+                  </button>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+      <!-- <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end center" fxLayoutGap="10px">
+        <mat-slide-toggle [(ngModel)]="operator.active" (ngModelChange)="activeOperator()">Estado</mat-slide-toggle>
+
+        <button *ngIf="!operator.id" mat-raised-button color="warn" (click)="createOperator()">Crear Operador</button>
+        <button [disabled]="!operator.active" mat-raised-button color="warn" (click)="deleteOperator()">Eliminar</button>
+        <button [disabled]="!operator.active" *ngIf="operator.id" [disabled]="!operator.email || email.invalid"
+          mat-raised-button color="primary" (click)="updateOperator()">Actualizar operador</button>
+      </div> -->
+</div>

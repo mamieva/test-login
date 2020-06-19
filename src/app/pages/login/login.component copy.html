@@ -1,0 +1,35 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- column -->
+
+  <div style="margin-top: 90px; margin-bottom: 30px" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="center center">
+    <img fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" style="width: 100%; z-index: 999;" src="../../../assets/images/Logo RC_Blanco.png"
+      alt="">
+  </div>
+  <div fxFlexOffset="25" fxFlex.gt-sm="50" fxFlex.gt-xs="100" fxFlex="100">
+    <!-- <mat-card> -->
+    <mat-card-header fxLayoutAlign="center end">
+      <mat-card-title fxLayoutAlign="center end" style="font-weight:bolder; font-size:16px;">Identificarse</mat-card-title>
+      <mat-card-subtitle>Ingrese su Usuario y Contraseña</mat-card-subtitle>
+    </mat-card-header>
+    <!-- <mat-card-content> -->
+    <form class="example-form">
+      <mat-form-field class="login">
+        <input matInput placeholder="usuario" name="user" [(ngModel)]="model.user">
+      </mat-form-field>
+
+      <mat-form-field style="color:white;" class="login">
+        <input matInput type="password" name="pass" [(ngModel)]="model.password" placeholder="contraseña">
+      </mat-form-field>
+      <div style="margin-top: 20px" fxLayoutAlign="center center">
+        <button fxFlex.gt-sm="50" fxFlex.gt-xs="50" fxFlex="50" (click)="login()" mat-stroked-button color="primary">Ingresar</button>
+      </div>
+    </form>
+    <!-- </mat-card-content> -->
+    <!-- </mat-card> -->
+  </div>
+  <!-- column -->
+</div>
+<div style="position:absolute;bottom:0;margin-top:20px;width:100%;" fxLayout="row" fxLayoutWrap="wrap">
+  <img style="height:50px; width: 100%; z-index: 999;" src="../../assets/images/Footer-1.png" alt="">
+</div>
+

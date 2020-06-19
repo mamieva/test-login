@@ -1,0 +1,67 @@
+<!-- ============================================================== -->
+<!-- Simple four boxes Row -->
+<!-- ============================================================== -->
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- column -->
+
+  <div *ngIf="model" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <mat-card-content fxLayoutAlign="start start">
+        <div fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+          <span style="display: block;width:100%;">
+            <b>Marginal: </b> {{' ' + model.name}}
+          </span>
+          <ng-container *ngFor="let version of model.versions">
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Editado por: </b> {{' ' + version.modifiedBy + ' - ' }}{{version.dateModified|date: 'dd/MM/yyyy
+              HH:mm:ss'}}
+            </span>
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Versión: </b> {{' ' + version.id}}
+            </span>
+          </ng-container>
+        </div>
+        <!-- <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" fxLayoutAlign="space-between center" fxLayoutWrap="wrap">
+          <button style="margin: 5px 0 5px 0" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" (click)="updateMargin()"
+            mat-raised-button color="primary">Actualizar Marginal</button>
+          <button style="margin: 5px 0 5px 0" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" (click)="previewPDF()"
+            mat-raised-button color="primary">preview Marginal</button>
+        </div> -->
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-content fxLayoutAlign="space-between start">
+        <mat-form-field fxFlex.gt-sm="80" fxFlex.gt-xs="80" fxFlex="80">
+          <mat-select placeholder="Seleccione un Atributo" [(ngModel)]="attribute" [ngModelOptions]="{standalone: true}">
+            <mat-option>
+              Seleccione un Valor
+            </mat-option>
+            <mat-option *ngFor="let sec of model.marginAttributes" [value]="sec">
+              {{ sec.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button style="margin: 5px 0 5px 0" fxFlex.gt-sm="15" fxFlex.gt-xs="15" fxFlex="15" (click)="addText()"
+          mat-raised-button color="primary">Copiar</button>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <app-ngx-editor [placeholder]="'Ingrese el template del marginal'" [spellcheck]="true" [(ngModel)]="model.template"
+        (ngModelChange)="changeHTML($event)"></app-ngx-editor>
+    </mat-card>
+    <div fxLayoutAlign="end space-between" style="width:100%">
+      <!-- <span style="text-align: center;"> -->
+      <button style="margin: 5px 10px 5px 0" fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" (click)="backPage()"
+        mat-raised-button color="primary">Volver</button>
+      <button style="margin: 5px 10px 5px 0" fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" (click)="updateMargin()"
+        mat-raised-button color="primary">Actualizar Marginal</button>
+      <button style="margin: 5px 10px 5px 0" fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" (click)="previewPDF()"
+        mat-raised-button color="primary">Previsualizar PDF</button>
+      <!-- </span> -->
+    </div>
+    <div id="pdfCertificate" style="min-height:300px">
+      <app-image-viewer *ngIf="pdfCertificate && pdfCertificate.base64" [images]="[pdfCertificate.base64]"
+        [idContainer]="'idOnHTML2'" [loadOnInit]="true"></app-image-viewer>
+    </div>
+  </div>
+</div>

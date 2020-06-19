@@ -1,0 +1,207 @@
+<!-- ============================================================== -->
+<!-- Simple four boxes Row -->
+<!-- ============================================================== -->
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- column -->
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutWrap="wrap">
+    <mat-card *ngIf="this.type === 'operatorConfig'" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+      <mat-card-content fxLayoutAlign="space-between center" fxLayoutWrap="wrap">
+        <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40">
+          <mat-form-field class="example-form-field">
+            <input matInput type="text" placeholder="Buscar por nombre, apellido o documento" title="Buscar por nombre, apellido o documento"
+              [(ngModel)]="search" />
+            <button mat-button *ngIf="search" matSuffix mat-icon-button aria-label="Clear" (click)="searchOperator(search='')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div fxFlex.gt-sm="60" fxFlex.gt-xs="60" fxFlex="60" fxLayoutAlign="space-evenly end">
+          <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+            <button mat-raised-button color="primary" (click)="searchOperator(search)">Buscar</button>
+          </div>
+          <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" fxLayoutAlign="end center">
+            <button mat-raised-button color="primary" (click)="goNewOperator()">Nuevo operador</button>
+          </div>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card *ngIf="this.type === 'profileConfig'" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+      <mat-card-content fxLayoutAlign="space-between center" fxLayoutWrap="wrap">
+        <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+          <mat-form-field class="example-form-field">
+            <input matInput type="text" placeholder="Buscar perfil" title="Buscar perfil" [(ngModel)]="search" />
+            <button mat-button *ngIf="search" matSuffix mat-icon-button aria-label="Clear" (click)="searchProfile(search='')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex.gt-sm="60" fxFlex.gt-xs="60" fxFlex="60" fxLayoutAlign="space-evenly end">
+          <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+            <button mat-raised-button color="primary" (click)="searchProfile(search)">Buscar</button>
+          </div>
+          <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" fxLayoutAlign="end center">
+            <button mat-raised-button color="primary" (click)="goNewProfile()">Nuevo perfil</button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-tab-group *ngIf="this.type === 'volumeConfig'" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100"
+      [(selectedIndex)]="index" (selectedTabChange)="changeTab($event)">
+      <mat-tab label="Tomos" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <ng-template mat-tab-label>
+          Tomos
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="customSearch" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <ng-template mat-tab-label>
+          Búsqueda Personalizada
+        </ng-template>
+        <mat-card *ngIf="this.type === 'volumeConfig'">
+          <mat-card-content fxLayoutAlign="space-between center" fxLayoutWrap="wrap">
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="space-between center" fxLayoutWrap="wrap">
+              <mat-form-field class="example-form-field" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                <input matInput type="number" placeholder="Número de Tomo" [(ngModel)]="searchParams.numberVolume" />
+              </mat-form-field>
+              <mat-form-field class="example-form-field" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                <input matInput type="number" placeholder="Año" [(ngModel)]="searchParams.yearVolume" />
+              </mat-form-field>
+              <mat-form-field class="example-form-field" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                <input matInput type="number" placeholder="Número de Libro" [(ngModel)]="searchParams.numberBook" />
+              </mat-form-field>
+              <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                <mat-select placeholder="Tipo de Acta" [(ngModel)]="searchParams.certificateType" [ngModelOptions]="{standalone: true}"
+                  required>
+                  <mat-option *ngFor="let option of certificateTypes" [value]="option.id">
+                    {{option.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                <mat-select placeholder="Estado" [(ngModel)]="searchParams.statusVolumen" [ngModelOptions]="{standalone: true}"
+                  required>
+                  <mat-option value="ACTIVE">
+                    ABIERTO
+                  </mat-option>
+                  <mat-option value="CLOSED">
+                    CERRADO
+                  </mat-option>
+                  <mat-option value="FULL">
+                    COMPLETO
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <div fxFlexOffset="60" fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-between end">
+                <button fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45" mat-raised-button color="primary" (click)="searchVolume()">Buscar</button>
+                <button fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45" mat-raised-button color="primary" (click)="clearSearchVolume()">Limpiar Búsqueda</button>
+                <!-- <button fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45" mat-raised-button color="warn" (click)="newVolume()">Nuevo
+                  Tomo</button> -->
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+      <mat-tab label="volumeType" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <ng-template mat-tab-label>
+          Tipos de Tomos
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+    <mat-card fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutWrap="wrap">
+      <mat-table *ngIf="model.content && model.content.length > 0" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100"
+        #tableActa [dataSource]="certificates">
+        <!-- Name Column -->
+        <ng-container *ngIf="['operatorConfig'].includes(type)" matColumnDef="Username">
+          <mat-header-cell *matHeaderCellDef> Usuario </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.userName }}
+          </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['marginConfig','profileConfig'].includes(type)" matColumnDef="Nombre">
+          <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.name }}
+          </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['operatorConfig'].includes(type)" matColumnDef="Nombre">
+          <mat-header-cell *matHeaderCellDef> Apellido y Nombre </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.name }}
+          </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['operatorConfig'].includes(type)" matColumnDef="DNI">
+          <mat-header-cell *matHeaderCellDef> DNI </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.docNumber }}
+          </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['volumeConfig'].includes(type) && !['volumeType'].includes(selectedTab)" matColumnDef="Numero">
+          <mat-header-cell *matHeaderCellDef> Nº</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.volumeNumber}} </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['volumeConfig'].includes(type)" matColumnDef="Tipo">
+          <mat-header-cell *matHeaderCellDef> Tipo de Acta</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.certificateType.name}} </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['volumeConfig'].includes(type) && !['volumeType'].includes(selectedTab)" matColumnDef="Cantidad Folios">
+          <mat-header-cell *matHeaderCellDef> Cant. Folios</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.lastFolio}} </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['volumeConfig'].includes(type) && ['volumeType'].includes(selectedTab)" matColumnDef="Cantidad Folios">
+          <mat-header-cell *matHeaderCellDef>Tipo de Tomo</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.volumeType.name}} </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['volumeConfig'].includes(type) && !['volumeType'].includes(selectedTab)" matColumnDef="Anio">
+          <mat-header-cell *matHeaderCellDef>Año</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.year}} </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['volumeConfig'].includes(type) && !['volumeType'].includes(selectedTab)" matColumnDef="Libro">
+          <mat-header-cell *matHeaderCellDef>Libro</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.bookNumber}} </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['profileConfig'].includes(type) " matColumnDef="Descripción">
+          <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.description }}
+          </mat-cell>
+        </ng-container>
+        <ng-container *ngIf="['operatorConfig','volumeConfig','profileConfig'].includes(type) && !['volumeType'].includes(selectedTab)"
+          matColumnDef="Estado">
+          <mat-header-cell *matHeaderCellDef> Estado</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.statusLabel}} </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+        <mat-row style="cursor: pointer" (click)="editConfiguration(element)" *matRowDef="let row; columns: displayColumns;let i = index;let element"></mat-row>
+      </mat-table>
+      <div *ngIf="model.content && model.content.length > 0 && model.links && model.links.length > 0" fxFlex.gt-sm="100"
+        fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end end">
+        <button (click)="goToPage('first')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+          <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+            first_page
+          </i>
+        </button>
+        <button (click)="goToPage('prev')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+          <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+            chevron_left
+          </i>
+        </button>
+        <button *ngIf="model" (click)="goToPage('self')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+          <span>
+            {{model.page.number + 1 + ' - ' + model.page.totalPages}}
+          </span>
+        </button>
+        <button (click)="goToPage('next')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+          <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+            chevron_right
+          </i>
+        </button>
+        <button (click)="goToPage('last')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+          <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+            last_page
+          </i>
+        </button>
+      </div>
+      <mat-card-content *ngIf="model.content && model.content.length === 0">
+        <h4>No se encontraron {{typeLabel}}</h4>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

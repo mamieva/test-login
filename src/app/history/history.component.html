@@ -1,0 +1,149 @@
+<!-- ============================================================== -->
+<!-- Simple four boxes Row -->
+<!-- ============================================================== -->
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- column -->
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+
+    <mat-card>
+      <mat-card-content>
+        <strong>Búsqueda Por Persona</strong>
+        <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start" style="margin-top:10px">
+          <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+            <input matInput placeholder="Nº Documento" [(ngModel)]="docNumber" #docNumberP [ngModelOptions]="{standalone: true}">
+          </mat-form-field>
+          <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+            [(ngModel)]="sex" #sexP [ngModelOptions]="{standalone: true}">
+            <mat-radio-button value="M">Masculino</mat-radio-button>
+            <mat-radio-button value="F">Femenino</mat-radio-button>
+          </mat-radio-group>
+          <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="searchCertificateByPerson()">Buscar</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-content>
+
+        <strong>Búsqueda Por Acta</strong>
+
+        <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+          <!-- <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+              <input matInput type="number" placeholder="Nº Tomo" [(ngModel)]="volumeNumber" [ngModelOptions]="{standalone: true}" required>
+            </mat-form-field>
+            <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+              <input matInput type="number" placeholder="Nº Folio" [(ngModel)]="folioNumber" [ngModelOptions]="{standalone: true}" required>
+            </mat-form-field> -->
+          <mat-form-field fxFlex.gt-sm="35" fxFlex.gt-xs="35" fxFlex="35">
+            <mat-select placeholder="Tipo de Acta" [(ngModel)]="certificateType" [ngModelOptions]="{standalone: true}"
+              required>
+              <mat-option *ngFor="let sec of certificateTypes" [value]="sec.code">
+                {{ sec.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+            <input matInput type="number" placeholder="Nº Acta" [(ngModel)]="certificateNumber" [ngModelOptions]="{standalone: true}"
+              required>
+          </mat-form-field>
+          <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+            <input matInput type="number" placeholder="Año" [(ngModel)]="year" [ngModelOptions]="{standalone: true}"
+              required>
+          </mat-form-field>
+
+          <mat-form-field fxFlex.gt-sm="85" fxFlex.gt-xs="85" fxFlex="85">
+            <mat-select placeholder="Seccional" [(ngModel)]="office" [ngModelOptions]="{standalone: true}" required>
+              <mat-option *ngFor="let sec of offices" [value]="sec.id">
+                {{ sec.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="getCertificatesByActa()">Buscar</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card >
+      <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start" class="example-container">
+        <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="text-align: right;margin: 20px 10px 20px 0;">
+            <button *ngIf="!isMargin && negativeCertificate" mat-raised-button color="primary" (click)="openNegative()">Realizar Certificación Negativa</button>
+          <button mat-raised-button color="warn" (click)="resetSearch()">Limpiar Búsqueda</button>
+        </div>
+        <mat-table *ngIf="model && model.content.length > 0" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" #tableActa [dataSource]="certificates">
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="Tipo">
+            <mat-header-cell *matHeaderCellDef> Acta </mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.certificateTypeName }} <span *ngIf="element.year != 0">
+                (<b> Año: </b>{{ element.year }} )
+              </span>
+              - <b>{{element.statusLabel}}</b>
+            </mat-cell>
+            <!-- <mat-cell *matCellDef="let element"> <b>Nº Acta: </b>{{element.certificateNumber + ' - '}} <b>Nº Folio: </b>{{element.folioNumber
+              +' - '}}
+              <b> Nº Tomo : </b>{{element.volume.volumeNumber + ' - ' + element.certificateTypeName + ' - '}} <b>{{element.statusLabel}}</b>
+            </mat-cell> -->
+          </ng-container>
+          <!-- <ng-container matColumnDef="Numero">
+            <mat-header-cell *matHeaderCellDef> {{ 'Nº Acta  ' + '  Nº Folio  ' + '  Nº Tomo  ' + '  Estado' }} </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.certificateNumber + ' - ' + element.folioNumber+ ' - ' +
+              element.volume.volumeNumber + ' - ' +element.statusLabel}} </mat-cell>
+          </ng-container> -->
+          <!-- <ng-container matColumnDef="Folio">
+            <mat-header-cell *matHeaderCellDef> Nº Folio</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.folioNumber}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Tomo">
+            <mat-header-cell *matHeaderCellDef> Nº Tomo</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.volume.volumeNumber}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Estado">
+            <mat-header-cell *matHeaderCellDef> Estado Trámite </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.statusLabel}} </mat-cell>
+          </ng-container> -->
+          <!-- <ng-container matColumnDef="Estado">
+              <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.status == 'APPROVED' ? 'APROBADO' : (element.status == 'IN_PROCESS' ? 'EN PROCESO' : (element.status == 'BLOCKED' ? 'BLOQUEADA' : 'RECHAZADA'))}}
+                </mat-cell>
+            </ng-container> -->
+          <!-- <ng-container matColumnDef="Acción">
+              <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <mat-icon matTooltip="visualizar los datos cargados!" matTooltipPosition="above" (click)="previewCertificate(element)" style="color:rgb(83, 169, 209);cursor:pointer">remove_red_eye</mat-icon>
+                <mat-icon matTooltip="Editar Acta!" matTooltipPosition="above" (click)="editCertificate(element)" style="color:rgb(27, 233, 164);cursor:pointer">edit</mat-icon>
+              </mat-cell>
+            </ng-container> -->
+          <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+          <mat-row style="cursor: pointer" (click)="clickeando(row,element)" *matRowDef="let row; columns: displayColumns;let i = index;let element"></mat-row>
+        </mat-table>
+        <div *ngIf="model && model.content.length > 0" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end end">
+          <button (click)="goToPage('first')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+            <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+              first_page
+            </i>
+          </button>
+          <button (click)="goToPage('prev')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+            <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+              chevron_left
+            </i>
+          </button>
+          <button *ngIf="model" (click)="goToPage('self')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+            <span>
+              {{model.page.number + 1 + ' - ' + model.page.totalPages}}
+            </span>
+          </button>
+          <button (click)="goToPage('next')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+            <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+              chevron_right
+            </i>
+          </button>
+          <button (click)="goToPage('last')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+            <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+              last_page
+            </i>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <!-- column -->
+</div>

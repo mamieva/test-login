@@ -1,0 +1,298 @@
+<!-- ============================================================== -->
+<!-- Simple four boxes Row -->
+<!-- ============================================================== -->
+<div fxLayout="row" fxLayoutWrap="wrap">
+
+  <mat-tab-group fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" [(selectedIndex)]="index">
+    <mat-tab label="Bandeja de Entrada" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+      <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+        <!-- <mat-card>
+          <mat-card-content>
+            <h4>Bandeja de Entrada</h4>
+          </mat-card-content>
+        </mat-card> -->
+        <mat-card>
+          <!-- <mat-card-content> -->
+          <mat-card-content *ngIf="!model || model.content.length == 0">
+            <h4>
+              No se encontraron Trámites en Curso
+            </h4>
+
+          </mat-card-content>
+          <div *ngIf="model && model.content.length > 0" fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start"
+            class="example-container" style="margin-top: 20px;">
+
+            <mat-table fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" #tableActa [dataSource]="certificates">
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="Numero">
+                <mat-header-cell *matHeaderCellDef> Nº </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Tipo">
+                <mat-header-cell *matHeaderCellDef> Tipo </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.procedureTypeName}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Estado">
+                <mat-header-cell *matHeaderCellDef> Estado Trámite </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.statusLabel}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="Fecha">
+                <mat-header-cell *matHeaderCellDef> Fecha Creación </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.date | date: 'dd/MM/yyyy - HH:mm'}} </mat-cell>
+              </ng-container>
+              <!-- <ng-container matColumnDef="Estado">
+                      <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.status == 'APPROVED' ? 'APROBADO' : (element.status == 'IN_PROCESS' ? 'EN PROCESO' : (element.status == 'BLOCKED' ? 'BLOQUEADA' : 'RECHAZADA'))}}
+                        </mat-cell>
+                    </ng-container> -->
+              <!-- <ng-container matColumnDef="Acción">
+                      <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        <mat-icon matTooltip="visualizar los datos cargados!" matTooltipPosition="above" (click)="previewCertificate(element)" style="color:rgb(83, 169, 209);cursor:pointer">remove_red_eye</mat-icon>
+                        <mat-icon matTooltip="Editar Acta!" matTooltipPosition="above" (click)="editCertificate(element)" style="color:rgb(27, 233, 164);cursor:pointer">edit</mat-icon>
+                      </mat-cell>
+                    </ng-container> -->
+              <mat-header-row *matHeaderRowDef="displayColumns"></mat-header-row>
+              <mat-row style="cursor: pointer" (click)="clickeando(row,element)" *matRowDef="let row; columns: displayColumns;let i = index;let element"></mat-row>
+            </mat-table>
+            <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end end">
+              <button (click)="goToPage('first')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+                <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+                  first_page
+                </i>
+              </button>
+              <button (click)="goToPage('prev')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+                <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+                  chevron_left
+                </i>
+              </button>
+              <button *ngIf="model" (click)="goToPage('self')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10"
+                mat-button>
+                <span>
+                  {{model.page.number + 1 + ' - ' + model.page.totalPages}}
+                </span>
+              </button>
+              <button (click)="goToPage('next')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+                <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+                  chevron_right
+                </i>
+              </button>
+              <button (click)="goToPage('last')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+                <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+                  last_page
+                </i>
+              </button>
+            </div>
+          </div>
+          <!-- </mat-card-content> -->
+        </mat-card>
+      </div>
+    </mat-tab>
+    <mat-tab label="Búsqueda Personalizada">
+
+      <mat-card>
+        <mat-card-content>
+          <strong>Búsqueda Por Persona</strong>
+          <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start" style="margin-top:10px">
+            <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+              <input matInput placeholder="Nº Documento" [(ngModel)]="docNumber" #docNumberP [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+            <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+              [(ngModel)]="sex" #sexP [ngModelOptions]="{standalone: true}">
+              <mat-radio-button value="M">Masculino</mat-radio-button>
+              <mat-radio-button value="F">Femenino</mat-radio-button>
+            </mat-radio-group>
+            <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="getProcedureByProcedure()">Buscar</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
+
+          <strong>Búsqueda Por Trámite</strong>
+          <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start" style="margin-top:10px">
+            <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+              <mat-select placeholder="Mesa" [(ngModel)]="section" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="changeSection($event)">
+
+                <mat-option>
+                  Seleccione un Valor
+                </mat-option>
+                <mat-option *ngFor="let sec of offices" [value]="sec">
+                  {{ sec.section.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+                    <input matInput type="number" placeholder="Nº Tomo" [(ngModel)]="volumeNumber" [ngModelOptions]="{standalone: true}" >
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+                    <input matInput type="number" placeholder="Nº Folio" [(ngModel)]="folioNumber" [ngModelOptions]="{standalone: true}" >
+                  </mat-form-field> -->
+            <mat-form-field *ngIf="procedureTypes.length > 0" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="47">
+              <mat-select placeholder="Tipo de Trámite" [(ngModel)]="procedureType" (ngModelChange)="findTasks($event)"
+                [ngModelOptions]="{standalone: true}">
+                <mat-option>
+                  Seleccione un Valor
+                </mat-option>
+                <mat-option *ngFor="let sec of procedureTypes" [value]="sec">
+                  {{ sec.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="proceduresStatus.length > 0" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="47">
+              <mat-select placeholder="Estado del Trámite" [(ngModel)]="procedureStatus" [ngModelOptions]="{standalone: true}">
+                <mat-option>
+                  Seleccione un Valor
+                </mat-option>
+                <mat-option *ngFor="let sec of proceduresStatus" [value]="sec">
+                  {{ sec.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="requestTypes.length > 0" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="47">
+              <mat-select placeholder="Origen del Trámite" [(ngModel)]="requestOrigin" [ngModelOptions]="{standalone: true}">
+                <mat-option>
+                  Seleccione un Valor
+                </mat-option>
+                <mat-option *ngFor="let sec of requestTypes" [value]="sec">
+                  {{ sec.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="tasks.length > 0" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="47">
+              <mat-select placeholder="Tarea" [(ngModel)]="task" (ngModelChange)="findTasksStatus($event)"
+                [ngModelOptions]="{standalone: true}">
+                <mat-option>
+                  Seleccione un Valor
+                </mat-option>
+                <mat-option *ngFor="let sec of tasks" [value]="sec">
+                  {{ sec.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="tasksStatus.length > 0" fxFlex.gt-sm="47" fxFlex.gt-xs="47" fxFlex="47">
+              <mat-select placeholder="Estado de la Tarea" [(ngModel)]="taskStatus" [ngModelOptions]="{standalone: true}">
+
+                <mat-option>
+                  Seleccione un Valor
+                </mat-option>
+                <mat-option *ngFor="let sec of tasksStatus" [value]="sec.id">
+                  {{ sec.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+                    <input matInput type="number" placeholder="Nº Trámite" [(ngModel)]="procedureNumber" [ngModelOptions]="{standalone: true}"
+                      >
+                  </mat-form-field> -->
+          </div>
+
+          <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start" style="width:100%">
+            <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+              <input matInput type="date" placeholder="Fecha desde" [(ngModel)]="dateFrom" [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+            <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+              <input matInput type="date" placeholder="Fecha hasta" [(ngModel)]="dateTo" [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+            <!-- <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+                    <input matInput type="number" placeholder="Año" [(ngModel)]="year" [ngModelOptions]="{standalone: true}" >
+                  </mat-form-field> -->
+
+            <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="getFilterInbox()">Buscar</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card *ngIf="modelSearch.content && modelSearch.content.length > 0">
+        <mat-card-content>
+          <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="text-align: right;">
+            <button mat-raised-button color="primary" (click)="resetSearch()">Limpiar Búsqueda</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card *ngIf="modelSearch.content && modelSearch.content.length > 0">
+        <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start" class="example-container" style="margin-top: 20px;">
+          <mat-table fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" #tableActaSearch [dataSource]="certificatesSearch">
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="Numero">
+              <mat-header-cell *matHeaderCellDef> Nº </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Tipo">
+              <mat-header-cell *matHeaderCellDef> Tipo </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.procedureTypeName}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Area">
+              <mat-header-cell *matHeaderCellDef> Área </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.tasks.current.section.name}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Etapa">
+              <mat-header-cell *matHeaderCellDef> Etapa </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.tasks.current.name}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="EstadoTarea">
+              <mat-header-cell *matHeaderCellDef> Estado Etapa </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.tasks.current.status}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Estado">
+              <mat-header-cell *matHeaderCellDef> Estado Trámite </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.statusLabel}} </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="Fecha">
+              <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.date | date: 'dd/MM/yyyy HH:mm'}} </mat-cell>
+            </ng-container>
+            <!-- <ng-container matColumnDef="Estado">
+                  <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.status == 'APPROVED' ? 'APROBADO' : (element.status == 'IN_PROCESS' ? 'EN PROCESO' : (element.status == 'BLOCKED' ? 'BLOQUEADA' : 'RECHAZADA'))}}
+                    </mat-cell>
+                </ng-container> -->
+            <!-- <ng-container matColumnDef="Acción">
+                  <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <mat-icon matTooltip="visualizar los datos cargados!" matTooltipPosition="above" (click)="previewCertificate(element)" style="color:rgb(83, 169, 209);cursor:pointer">remove_red_eye</mat-icon>
+                    <mat-icon matTooltip="Editar Acta!" matTooltipPosition="above" (click)="editCertificate(element)" style="color:rgb(27, 233, 164);cursor:pointer">edit</mat-icon>
+                  </mat-cell>
+                </ng-container> -->
+            <mat-header-row *matHeaderRowDef="displayColumnsSearch"></mat-header-row>
+            <mat-row style="cursor: pointer" (click)="clickeando(row,element)" *matRowDef="let row; columns: displayColumnsSearch;let i = index;let element"></mat-row>
+          </mat-table>
+          <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end end">
+            <button (click)="goToPageSearch('first')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+              <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+                first_page
+              </i>
+            </button>
+            <button (click)="goToPageSearch('prev')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+              <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+                chevron_left
+              </i>
+            </button>
+            <button *ngIf="model" (click)="goToPageSearch('self')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10"
+              mat-button>
+              <span>
+                {{modelSearch.page.number + 1 + ' - ' + modelSearch.page.totalPages}}
+              </span>
+            </button>
+            <button (click)="goToPageSearch('next')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+              <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+                chevron_right
+              </i>
+            </button>
+            <button (click)="goToPageSearch('last')" fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button>
+              <i style="font-size: 36px;cursor:pointer;" class="material-icons">
+                last_page
+              </i>
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- column -->
+
+  <!-- column -->
+</div>

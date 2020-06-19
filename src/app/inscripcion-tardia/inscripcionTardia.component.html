@@ -1,0 +1,262 @@
+<!-- ============================================================== -->
+<!-- Simple four boxes Row -->
+<!-- ============================================================== -->
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- column -->
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <mat-card-content>
+        <!-- Row -->
+        <h4>Inscripción Tardía {{ notJudicial ? '' : 'Judicial'}}</h4>
+        <button mat-raised-button color="primary" *ngIf="notJudicial" (click)="inscripctionJudicial()" id="toggle-linear">
+          Inscripción Judicial
+        </button>
+        <mat-horizontal-stepper (selectionChange)="cambioIndice($event)" [linear]="isLinear" [selectedIndex]="indice"
+          #stepper id="stepper">
+          <mat-step *ngIf="notJudicial" [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+              <ng-template matStepLabel>Buscar Persona</ng-template>
+
+              <!-- <mat-accordion> -->
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Testigo Nº 1</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <span fxFlex.gt-sm="15" fxFlex.gt-xs="15" fxFlex="15">
+                    <b>Buscar Persona</b>
+                  </span>
+                  <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                    <input matInput placeholder="Nº Documento" [(ngModel)]="personTestigo_1.docNumber" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+                    [(ngModel)]="personTestigo_1.sex" [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+
+                  <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="findTestigo_1()">Buscar</button>
+                </div>
+                <div *ngIf="personTestigo_1.find && testigo_1.person.id" fxLayoutWrap="wrap" fxLayout="row"
+                  fxLayoutAlign="center center">
+                  <mat-card fxFlex.gt-sm="80" fxFlex.gt-xs="80" fxFlex="80">
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center">
+                      <img style="height: 150px" *ngIf="testigo_1.person.photoBase64" [src]="'data:image;base64,' + testigo_1.person.photoBase64 | consultationSafeHtml" />
+                    </div>
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40">
+                      <div style="width:100%">
+                        {{testigo_1.person.lastName + ' ' + (testigo_1.person.secondLastName ?
+                        testigo_1.person.secondLastName
+                        : '') + ', ' + testigo_1.person.firstName}}
+                      </div>
+                      <div style="width:100%">
+                        {{testigo_1.person.docType.name + ': ' + testigo_1.person.docNumber}}
+                      </div>
+                      <div style="width:100%">
+                        Fecha de Nacimiento: {{testigo_1.person.birth.birthDay | date: 'dd/MM/yyyy'}}
+                      </div>
+                      <div style="width:100%">
+                        {{testigo_1.person.sex == 'M' ? 'Masculino':'Femenino'}}
+                      </div>
+                    </div>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Testigo Nº 2</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <span fxFlex.gt-sm="15" fxFlex.gt-xs="15" fxFlex="15">
+                    <b>Buscar Persona</b>
+                  </span>
+                  <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                    <input matInput placeholder="Nº Documento" [(ngModel)]="personTestigo_2.docNumber" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+                    [(ngModel)]="personTestigo_2.sex" [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+
+                  <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="findTestigo_2()">Buscar</button>
+                </div>
+                <div *ngIf="personTestigo_2.find && testigo_2.person.id" fxLayoutWrap="wrap" fxLayout="row"
+                  fxLayoutAlign="center center">
+                  <mat-card fxFlex.gt-sm="80" fxFlex.gt-xs="80" fxFlex="80">
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center">
+                      <img style="height: 150px" *ngIf="testigo_2.person.photoBase64" [src]="'data:image;base64,' + testigo_2.person.photoBase64 | consultationSafeHtml" />
+                    </div>
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40">
+                      <div style="width:100%">
+                        {{testigo_2.person.lastName + ' ' + (testigo_2.person.secondLastName ?
+                        testigo_2.person.secondLastName
+                        : '') + ', ' + testigo_2.person.firstName}}
+                      </div>
+                      <div style="width:100%">
+                        {{testigo_2.person.docType.name + ': ' + testigo_2.person.docNumber}}
+                      </div>
+                      <div style="width:100%">
+                        Fecha de Nacimiento: {{testigo_2.person.birth.birthDay | date: 'dd/MM/yyyy'}}
+                      </div>
+                      <div style="width:100%">
+                        {{testigo_2.person.sex == 'M' ? 'Masculino':'Femenino'}}
+                      </div>
+                    </div>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+              <!-- </mat-accordion> -->
+              <div style="text-align: right; margin:20px 0 0 0;">
+                <!-- <button mat-raised-button color="primary" >Atras</button> -->
+                <button mat-raised-button color="primary" (click)="updateProcedure()">Siguiente</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="fourthFormGroup">
+            <form [formGroup]="fourthFormGroup" fxLayoutWrap="wrap" fxLayout="row">
+              <ng-template matStepLabel>Documentación</ng-template>
+
+              <h5>Documentación</h5>
+              <div style="width: 100%" class="example-container">
+                <mat-table #table [dataSource]="dataSource">
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="Archivo">
+                    <mat-header-cell *matHeaderCellDef> Archivo </mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="margin-right: 10px"> {{element.name}} <b *ngIf="element.digitalized">
+                        (Digitalizado) </b></mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="Obligatorio">
+                    <mat-header-cell *matHeaderCellDef> Obligatorio </mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="margin-right: 10px"> {{element.required ? 'OBLIGATORIO'
+                      : 'OPCIONAL'}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index" fxLayoutWrap="wrap" style="font-size: 26px;">
+                      <!-- <mat-icon matTooltip="Editar!" matTooltipPosition="above" (click)="editMargin(element,i)" style="color:#72d487;cursor:pointer">edit
+                      </mat-icon> -->
+                      <!-- <mat-icon matTooltip="Eliminar!" matTooltipPosition="above" (click)="deleteFiles(element)" style="color:#ff6868;cursor:pointer">delete_forever
+                      </mat-icon> -->
+                      <!-- <button *ngIf="!element.digitalized" fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70"
+                        mat-raised-button color="primary" (click)="digitalize(element)">Digitalizar</button> -->
+
+                      <!-- <button *ngIf="element.digitalized" fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70"
+                        mat-raised-button color="warn" (click)="digitalize(element)">Digitalizar Nuevamente</button>
+                      <button style="margin-top:5px;" *ngIf="element.digitalized" fxFlex.gt-sm="70" fxFlex.gt-xs="70"
+                        fxFlex="70" mat-raised-button color="primary" (click)="digitalize(element,true)">Agregar Página</button> -->
+
+                      <mat-icon *ngIf="btnDownloadAttach(element)" matTooltip="Descargar Documento!" matTooltipPosition="above"
+                        (click)="downloadDocument(element)" style="color:#459ef1c5;cursor:pointer;font-size:25px;margin:0 5px 0 5px;">file_download
+                      </mat-icon>
+                      <mat-icon *ngIf="element.digitalized && !btnDownloadAttach(element)" matTooltip="Visualizar Documentación Escaneada!"
+                        matTooltipPosition="above" (click)="getDocument(element)" style="color:#4556f1c5;cursor:pointer;font-size: 25px;margin:0 5px 0 5px;">remove_red_eye
+                      </mat-icon>
+                      <mat-icon *ngIf="element.digitalized && element.validAddPage" matTooltip="Adicionar Documentación!"
+                        matTooltipPosition="above" (click)="digitalize(element,true)" style="color:#45f1a9c5;cursor:pointer;font-size: 25px;margin:0 5px 0 5px;">note_add
+                      </mat-icon>
+                      <mat-icon *ngIf="!element.digitalized" matTooltip="Digitalizar Documentación" matTooltipPosition="above"
+                        (click)="digitalize(element)" style="color:#45c9f1c5;cursor:pointer;font-size: 30px;margin:0 5px 0 5px;">scanner
+                      </mat-icon>
+                      <mat-icon *ngIf="element.digitalized" matTooltip="Eliminar Documento Digitalizado!"
+                        matTooltipPosition="above" (click)="deleteFilesDoc(element)" style="color:#f14545c5;cursor:pointer;font-size:25px;margin:0 5px 0 5px;">delete_forever
+                      </mat-icon>
+                      <mat-icon *ngIf="!element.digitalized" matTooltip="Adjuntar Archivo!" matTooltipPosition="above"
+                        (click)="addFileAttachment(element)" style="color:#4595f1c5;cursor:pointer;font-size:25px;margin:0 5px 0 5px;">attach_file
+                      </mat-icon>
+
+                      <!-- <sup style="font-size: 10px;font-weight: bold;">{{'('+element.fileCount+')'}}</sup>
+                        <input [id]="'file-input' + i" type="file" name="name" multiple style="display: none;" (change)="uploadFiles($event,element.id,i)"
+                        /> -->
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"></mat-row>
+                </mat-table>
+                <!-- ELEMENTO FILE -->
+                <input [id]="'file-input'" type="file" name="name" style="display: none;" (change)="uploadFilesAttachment($event)" />
+              </div>
+              <mat-card fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="documentScanned.base64" style="margin-top:20px; width: 100%"
+                fxLayoutWrap="wrap">
+                <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end start">
+                  <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button style="margin: 10px 10px 0 0;"
+                    (click)="closePreviewDoc()"><i class="material-icons">
+                      close
+                    </i></button>
+                </div>
+                <app-image-viewer fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="documentScanned.base64"
+                  [images]="[documentScanned.base64]" [idContainer]="'idOnHTML4'" [loadOnInit]="true"></app-image-viewer>
+              </mat-card>
+              <div style="text-align: right;margin:20px 0 0 0;" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <button mat-raised-button color="primary" *ngIf="notJudicial" (click)="backStep()">Atras</button>
+                <button mat-raised-button color="primary" (click)="updateProcedure()">Siguiente</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="fifthFormGroup">
+            <form [formGroup]="fifthFormGroup">
+              <ng-template matStepLabel>Finalización</ng-template>
+
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Seccional destino</strong>
+                </mat-expansion-panel-header>
+                <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                  <mat-select placeholder="Seccional" [(ngModel)]="model.procedureFromRequest.office" [ngModelOptions]="{standalone: true}"
+                    required>
+                    <mat-option *ngFor="let sec of offices" [value]="sec">
+                      {{ sec.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Observación</strong>
+                </mat-expansion-panel-header>
+                <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="margin-top: 25px; display: block;font-size: 14px;">
+                  <textarea matInput placeholder="Observaciones" rows="5" [(ngModel)]="model.observations"
+                    [ngModelOptions]="{standalone: true}" #observations></textarea>
+                </mat-form-field>
+              </mat-expansion-panel>
+
+
+              <!-- <div *ngIf="pdfValidate.pdfDraftBase64" class="col-md-12">
+                <a id="download" [download]="'Certificado de Validacion - .pdf'" [href]="'data:application/octet-stream;base64,' + pdfValidate.pdfDraftBase64 | clapSafeHtml">Descargar Certificado de Validación
+                  <i class="material-icons" style="font-size: 40px; ">file_download</i>
+                </a>
+              </div> -->
+              <!-- <div *ngIf="pdfCertificate.pdfDraftBase64" class="col-md-12">
+                <a id="download" [download]="'Certificado - .pdf'" [href]="'data:application/octet-stream;base64,' + pdfCertificate.pdfDraftBase64 | clapSafeHtml">Descargar Certificado
+                  <i class="material-icons" style="font-size: 40px; ">file_download</i>
+                </a>
+              </div> -->
+              <app-image-viewer *ngIf="pdfValidate.pdfDraftBase64 && !pdfCertificate.pdfDraftBase64" [images]="[pdfValidate.pdfDraftBase64]"
+                [idContainer]="'idOnHTML'" [loadOnInit]="true"></app-image-viewer>
+
+              <app-image-viewer *ngIf="pdfCertificate.pdfDraftBase64" [images]="[pdfCertificate.pdfDraftBase64]"
+                [idContainer]="'idOnHTML2'" [loadOnInit]="true"></app-image-viewer>
+              <!-- <pdf-viewer [src]="'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='" [render-text]="true" style="display: block;"></pdf-viewer> -->
+              <!-- <div style="text-align: right;margin:20px 0 0 0;">
+                <button mat-raised-button color="primary" >Atras</button>
+                <button mat-raised-button color="primary" (click)="updateProcedure()">Siguiente</button>
+              </div> -->
+
+              <div style="text-align: right;margin:20px 0 0 0;">
+                <button mat-raised-button *ngIf="!finalizado" color="primary" (click)="backStep()">Atras</button>
+                <button mat-raised-button *ngIf="!finalizado" color="primary" matStepperReset (click)="resetStepper(stepper)">Limpiar</button>
+                <!-- <button mat-raised-button color="primary" *ngIf="!finalizado" matStepperReset (click)="updateProcedure(true)">Validar</button> -->
+                <button mat-raised-button color="primary" *ngIf="validate && !finalizado" matStepperReset (click)="finalizarTramite()">Finalizar</button>
+                <button mat-raised-button color="primary" *ngIf="finalizado" matStepperReset (click)="nextStep()">Continuar
+                  con el Trámite</button>
+                <button mat-raised-button color="primary" *ngIf="finalizado" matStepperReset (click)="backToInbox()">Volver
+                  a la Bandeja</button>
+              </div>
+            </form>
+          </mat-step>
+        </mat-horizontal-stepper>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- column -->
+</div>

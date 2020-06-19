@@ -1,0 +1,595 @@
+<!-- ============================================================== -->
+<!-- Simple four boxes Row -->
+<!-- ============================================================== -->
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- column -->
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <mat-card-content>
+        <!-- Row -->
+        <h4>Registro de Reconocimiento</h4>
+        <!-- <button mat-raised-button color="primary" (click)="isLinear = !isLinear" id="toggle-linear">
+          {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+        </button> -->
+        <mat-horizontal-stepper (selectionChange)="cambioIndice($event)" [linear]="isLinear" [selectedIndex]="indice"
+          #stepper id="stepper">
+          <mat-step [stepControl]="fourthFormGroup">
+            <form [formGroup]="fourthFormGroup">
+              <ng-template matStepLabel>Reconocido</ng-template>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Nacido</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between center">
+                  <span fxFlex.gt-sm="15" fxFlex.gt-xs="15" fxFlex="x15">
+                    <b>Buscar Persona</b>
+                  </span>
+                  <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                    <input matInput placeholder="Nº Documento" [(ngModel)]="personSon.docNumber" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+                    [(ngModel)]="personSon.sex" [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+
+                  <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="findSon()">Buscar</button>
+                </div>
+                <!-- <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <mat-checkbox #foreignFat value="true" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">Extranjero</mat-checkbox>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Pais de Nacimiento" [(ngModel)]="son.person.nationality" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                </div> -->
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="center center">
+                  <div *ngIf="son.person.optionsLastName && son.person.optionsLastName.length > 0" fxFlex.gt-sm="100"
+                    fxFlex.gt-xs="100" fxFlex="100" fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-form-field *ngIf="son.person.optionsLastName && son.person.optionsLastName.length > 0"
+                      fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                      <mat-select placeholder="Seleccione el Apellido" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="son.person.lastNames" (ngModelChange)="changeLastNames($event,'son')">
+                        <mat-option *ngFor="let doc of son.person.optionsLastName" [value]="doc">
+                          {{ doc.lastName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="son.person.lastNames" fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                      <input matInput readonly placeholder="Segundo Apellido" [(ngModel)]="son.person.lastNames.secondLastName"
+                        [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                    <button fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" mat-raised-button color="primary" (click)="updatePerson('son')">Actualizar</button>
+                  </div>
+                  <mat-card *ngIf="son.person.id" fxFlex.gt-sm="80" fxFlex.gt-xs="80" fxFlex="80">
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center">
+                      <img style="height: 150px" *ngIf="son.person.photoBase64" [src]="'data:image;base64,' + son.person.photoBase64 | reportsC2SafeHtml" />
+                    </div>
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40">
+                      <div style="width:100%">
+                        {{son.person.lastName + ' ' + (son.person.secondLastName ? son.person.secondLastName : '') + ',
+                        ' + son.person.firstName}}
+                      </div>
+                      <div style="width:100%">
+                        {{son.person.docType.name + ': ' + son.person.docNumber}}
+                      </div>
+                      <div style="width:100%">
+                        Fecha de Nacimiento: {{son.person.birth.birthDay | date: 'dd/MM/yyyy'}}
+                      </div>
+                      <div style="width:100%">
+                        {{son.person.sex == 'M' ? 'Masculino':'Femenino'}}
+                      </div>
+                    </div>
+                    <div fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" fxLayoutAlign="end start">
+                      <button fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" mat-button style="margin: 10px 10px 0 0;"
+                        (click)="closePerson('son')"><i class="material-icons">
+                          close
+                        </i></button>
+                    </div>
+                  </mat-card>
+                  <div *ngIf="son.person.id" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutWrap="wrap"
+                    fxLayout="row" fxLayoutAlign="space-between start">
+                    <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                      <mat-select placeholder="Provincia" (change)="changeState($event)" [(ngModel)]="son.person.birth.address.city.department.state.id"
+                        [ngModelOptions]="{standalone: true}" required>
+                        <mat-option *ngFor="let sec of states" [value]="sec.id">
+                          {{ sec.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                      <mat-select placeholder="Departamento" [(ngModel)]="son.person.birth.address.city.department.id"
+                        (change)="changeDepartament($event)" [ngModelOptions]="{standalone: true}" required>
+                        <mat-option *ngFor="let sec of departaments" [value]="sec.id">
+                          {{ sec.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                      <mat-select placeholder="Ciudad" [(ngModel)]="son.person.birth.address.city.id" [ngModelOptions]="{standalone: true}"
+                        required>
+                        <mat-option *ngFor="let sec of cities" [value]="sec.id">
+                          {{ sec.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                        <input matInput placeholder="Documento">
+                      </mat-form-field> -->
+                  </div>
+                </div>
+              </mat-expansion-panel>
+              <div style="text-align: right; margin:20px 0 0 0;">
+                <button mat-raised-button color="primary" (click)="updateProcedure(false)">Siguiente</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+              <ng-template matStepLabel>Reconocientes</ng-template>
+
+              <!-- <mat-accordion> -->
+
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Reconociente Nº 1</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <span fxFlex.gt-sm="15" fxFlex.gt-xs="15" fxFlex="15">
+                    <b>Buscar Persona</b>
+                  </span>
+                  <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                    <input matInput placeholder="Nº Documento" [(ngModel)]="personProgenitor_1.docNumber"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+                    [(ngModel)]="personProgenitor_1.sex" [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+
+                  <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="findProgenitor_1()">Buscar</button>
+                </div>
+                <div *ngIf="!personProgenitor_1.find && !progenitor_1.person.id" fxLayoutWrap="wrap" fxLayout="row"
+                  fxLayoutAlign="space-between start">
+                  <mat-checkbox #foreignMom value="true" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">Extranjero</mat-checkbox>
+                  <mat-form-field *ngIf="foreignMom.checked" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Pais de Nacimiento" [(ngModel)]="progenitor_1.person.nationality"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                </div>
+                <div *ngIf="!personProgenitor_1.find && !progenitor_1.person.id" fxLayoutWrap="wrap" fxLayout="row"
+                  fxLayoutAlign="space-between start">
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Apellido/s" [(ngModel)]="progenitor_1.person.lastName" required
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Segundo Apellido" [(ngModel)]="progenitor_1.person.secondLastName"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Nombre/s" [(ngModel)]="progenitor_1.person.firstName" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <mat-select placeholder="Tipo de Documento" [ngModelOptions]="{standalone: true}" [(ngModel)]="progenitor_1.person.docType.code">
+                      <mat-option *ngFor="let doc of documentTypes" [value]="doc.code">
+                        {{ doc.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Tipo de Documento" [(ngModel)]="progenitor_1.person.documentType" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field> -->
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Documento" [(ngModel)]="progenitor_1.person.docNumber"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="date" placeholder="Fecha de Nacimiento" [(ngModel)]="progenitor_1.person.birth.birthDay"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <mat-select placeholder="Estado Civil" [ngModelOptions]="{standalone: true}" [(ngModel)]="progenitor_1.person.civilStatus">
+                      <mat-option *ngFor="let doc of civilStatus" [value]="doc">
+                        {{ doc.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Género" [(ngModel)]="progenitor_1.person.sex" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field> -->
+
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Domicilio" [(ngModel)]="progenitor_1.person.address.addressLine"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+                    [(ngModel)]="progenitor_1.person.sex" [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+                  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end end">
+                    <button fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" mat-raised-button color="primary" (click)="postProgenitor_1()">Crear
+                      Persona</button>
+                  </div>
+                </div>
+                <div *ngIf="personProgenitor_1.find && progenitor_1.person.id" fxLayoutWrap="wrap" fxLayout="row"
+                  fxLayoutAlign="center center">
+                  <div *ngIf="progenitor_1.person.optionsLastName && progenitor_1.person.optionsLastName.length > 0"
+                    fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <mat-form-field *ngIf="progenitor_1.person.optionsLastName && progenitor_1.person.optionsLastName.length > 0"
+                      fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                      <mat-select placeholder="Seleccione el Apellido" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="progenitor_1.person.lastNames" (ngModelChange)="changeLastNames($event,'progenitor_1')">
+                        <mat-option *ngFor="let doc of progenitor_1.person.optionsLastName" [value]="doc">
+                          {{ doc.lastName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="progenitor_1.person.lastNames" fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                      <input matInput readonly placeholder="Segundo Apellido" [(ngModel)]="progenitor_1.person.lastNames.secondLastName"
+                        [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                    <button fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" mat-raised-button color="primary" (click)="updatePerson('progenitor_1')">Actualizar</button>
+
+                  </div>
+                  <mat-card fxFlex.gt-sm="80" fxFlex.gt-xs="80" fxFlex="80">
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center">
+                      <img style="height: 150px" *ngIf="progenitor_1.person.photoBase64" [src]="'data:image;base64,' + progenitor_1.person.photoBase64 | reportsC2SafeHtml" />
+                    </div>
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40">
+                      <div style="width:100%">
+                        {{progenitor_1.person.lastName + ' ' + (progenitor_1.person.secondLastName ?
+                        progenitor_1.person.secondLastName : '') + ',
+                        ' + progenitor_1.person.firstName}}
+                      </div>
+                      <div style="width:100%">
+                        {{progenitor_1.person.docType.name + ': ' + progenitor_1.person.docNumber}}
+                      </div>
+                      <div style="width:100%">
+                        Fecha de Nacimiento: {{progenitor_1.person.birth.birthDay | date: 'dd/MM/yyyy'}}
+                      </div>
+                      <div style="width:100%">
+                        {{progenitor_1.person.sex == 'M' ? 'Masculino':'Femenino'}}
+                      </div>
+                    </div>
+                    <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayout="column" [(ngModel)]="progenitor_1.actorType.relationship.code"
+                      [ngModelOptions]="{standalone: true}">
+                      <mat-radio-button value="">2da filiación</mat-radio-button>
+                      <mat-radio-button value="RECOGNITION_PROGENITOR_REPRODUCTIVE">3ra filiación</mat-radio-button>
+                    </mat-radio-group>
+
+                    <div fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" fxLayoutAlign="end start">
+                      <button fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" mat-button style="margin: 10px 10px 0 0;"
+                        (click)="closePerson('progenitor_1')"><i class="material-icons">
+                          close
+                        </i></button>
+                    </div>
+                  </mat-card>
+                </div>
+
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Reconociente Nº 2</strong>
+                </mat-expansion-panel-header>
+                <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <span fxFlex.gt-sm="15" fxFlex.gt-xs="15" fxFlex="15">
+                    <b>Buscar Persona</b>
+                  </span>
+                  <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                    <input matInput placeholder="Nº Documento" [(ngModel)]="personProgenitor_2.docNumber"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+                    [(ngModel)]="personProgenitor_2.sex" [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+
+                  <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="findProgenitor_2()">Buscar</button>
+                </div>
+                <div *ngIf="!personProgenitor_2.find && !progenitor_2.person.id" fxLayoutWrap="wrap" fxLayout="row"
+                  fxLayoutAlign="space-between start">
+                  <mat-checkbox #foreignFat value="true" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">Extranjero</mat-checkbox>
+                  <mat-form-field *ngIf="foreignFat.checked" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Pais de Nacimiento" [(ngModel)]="progenitor_2.person.nationality"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                </div>
+                <div *ngIf="!personProgenitor_2.find && !progenitor_2.person.id" fxLayoutWrap="wrap" fxLayout="row"
+                  fxLayoutAlign="space-between start">
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Apellido/s" [(ngModel)]="progenitor_2.person.lastName" required
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Segundo Apellido" [(ngModel)]="progenitor_2.person.secondLastName"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Nombre/s" [(ngModel)]="progenitor_2.person.firstName" [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <!-- <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput placeholder="Tipo de Documento" [(ngModel)]="progenitor_2.person.documentType" [ngModelOptions]="{standalone: true}">
+                    </mat-form-field> -->
+
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <mat-select placeholder="Tipo de Documento" [ngModelOptions]="{standalone: true}" [(ngModel)]="progenitor_2.person.docType.code">
+                      <mat-option *ngFor="let doc of documentTypes" [value]="doc.code">
+                        {{ doc.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Documento" [(ngModel)]="progenitor_2.person.docNumber"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput type="date" placeholder="Fecha de Nacimiento" [(ngModel)]="progenitor_2.person.birth.birthDay"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <mat-select placeholder="Estado Civil" [ngModelOptions]="{standalone: true}" [(ngModel)]="progenitor_2.person.civilStatus">
+                      <mat-option *ngFor="let doc of civilStatus" [value]="doc">
+                        {{ doc.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                    <input matInput placeholder="Domicilio" [(ngModel)]="progenitor_2.person.address.addressLine"
+                      [ngModelOptions]="{standalone: true}">
+                  </mat-form-field>
+                  <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center"
+                    [(ngModel)]="progenitor_2.person.sex" [ngModelOptions]="{standalone: true}">
+                    <mat-radio-button value="M">Masculino</mat-radio-button>
+                    <mat-radio-button value="F">Femenino</mat-radio-button>
+                  </mat-radio-group>
+
+                  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end end">
+                    <button fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" mat-raised-button color="primary" (click)="postProgenitor_2()">Crear
+                      Persona</button>
+                  </div>
+                </div>
+
+                <div *ngIf="personProgenitor_2.find && progenitor_2.person.id" fxLayoutWrap="wrap" fxLayout="row"
+                  fxLayoutAlign="center center">
+                  <div *ngIf="progenitor_2.person.optionsLastName && progenitor_2.person.optionsLastName.length > 0"
+                    fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between center">
+
+                    <mat-form-field *ngIf="progenitor_2.person.optionsLastName && progenitor_2.person.optionsLastName.length > 0"
+                      fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                      <mat-select placeholder="Seleccione el Apellido" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="progenitor_2.person.lastNames" (ngModelChange)="changeLastNames($event,'progenitor_2')">
+                        <mat-option *ngFor="let doc of progenitor_2.person.optionsLastName" [value]="doc">
+                          {{ doc.lastName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="progenitor_2.person.lastNames" fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30">
+                      <input matInput readonly placeholder="Segundo Apellido" [(ngModel)]="progenitor_2.person.lastNames.secondLastName"
+                        [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                    <button fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" mat-raised-button color="primary" (click)="updatePerson('progenitor_2')">Actualizar</button>
+
+                  </div>
+                  <mat-card fxFlex.gt-sm="80" fxFlex.gt-xs="80" fxFlex="80">
+
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayoutAlign="space-evenly center">
+                      <img style="height: 150px" *ngIf="progenitor_2.person.photoBase64" [src]="'data:image;base64,' + progenitor_2.person.photoBase64 | reportsC2SafeHtml" />
+                    </div>
+                    <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40">
+                      <div style="width:100%">
+                        {{progenitor_2.person.lastName + ' ' + (progenitor_2.person.secondLastName ?
+                        progenitor_2.person.secondLastName : '') + ',
+                        ' + progenitor_2.person.firstName}}
+                      </div>
+                      <div style="width:100%">
+                        {{progenitor_2.person.docType.name + ': ' + progenitor_2.person.docNumber}}
+                      </div>
+                      <div style="width:100%">
+                        Fecha de Nacimiento: {{progenitor_2.person.birth.birthDay | date: 'dd/MM/yyyy'}}
+                      </div>
+                      <div style="width:100%">
+                        {{progenitor_2.person.sex == 'M' ? 'Masculino':'Femenino'}}
+                      </div>
+                    </div>
+                    <mat-radio-group fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40" fxLayout="column" [(ngModel)]="progenitor_2.actorType.relationship.code"
+                      [ngModelOptions]="{standalone: true}">
+                      <mat-radio-button value="">2da filiación</mat-radio-button>
+                      <mat-radio-button value="RECOGNITION_PROGENITOR_REPRODUCTIVE">3ra filiación</mat-radio-button>
+                    </mat-radio-group>
+                    <div fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" fxLayoutAlign="end start">
+                      <button fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20" mat-button style="margin: 10px 10px 0 0;"
+                        (click)="closePerson('progenitor_2')"><i class="material-icons">
+                          close
+                        </i></button>
+                    </div>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+              <div style="text-align: right; margin:20px 0 0 0;">
+                <button mat-raised-button color="primary" (click)="backStep()">Atras</button>
+                <button mat-raised-button color="primary" (click)="updateProcedure(false)">Siguiente</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="sixthFormGroup">
+            <form [formGroup]="sixthFormGroup" fxLayoutWrap="wrap" fxLayout="row">
+              <ng-template matStepLabel>Documentación</ng-template>
+
+              <mat-expansion-panel *ngIf="showDatosActa()" [expanded]="true" fxFlex.gt-sm="100" fxFlex.gt-xs="100"
+                fxFlex="100">
+                <mat-expansion-panel-header>
+                  <strong>Datos del Acta</strong>
+                </mat-expansion-panel-header>
+                <div class="marginales" fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+                  <ng-container *ngFor="let attr of model.procedureHasAttributeValues; let i = index;">
+                    <mat-form-field *ngIf="attr.enableForEdit" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+                      <input matInput [placeholder]="attr.name" [(ngModel)]="model.procedureHasAttributeValues[i].value"
+                        required [ngModelOptions]="{standalone: true}">
+                    </mat-form-field>
+                  </ng-container>
+                </div>
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="true" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <mat-expansion-panel-header>
+                  <strong>Selección de Apellido</strong>
+                </mat-expansion-panel-header>
+                <!-- <mat-form-field *ngIf="model.optionsLastName && model.optionsLastName.length > 0" fxFlex.gt-sm="45"
+                  fxFlex.gt-xs="45" fxFlex="45">andalone: true}" [(ngModel)]="son.person.lastNames"
+                    (ngModelChange)="changeLastNames($event,'son')">
+                    <mat-option *ngFor="let doc of model.optionsLastName; let i = index" [value]="doc">
+                      {{ doc.lastName + ' ' + doc.secondLastName}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field> -->
+                <div fxLayoutAlign="space-evenly center">
+                  <mat-form-field *ngIf="model.optionsLastName && model.optionsLastName.length > 0" fxFlex.gt-sm="45"
+                    fxFlex.gt-xs="45" fxFlex="45">
+                    <!-- <input matInput placeholder="Apellido/s" [(ngModel)]="born.person.lastName" [value]="(progenitor_1.person.lastName ? progenitor_1.person.lastName : '') + ' '+ (progenitor_2.person.lastName ? progenitor_2.person.lastName : '') + ' '+ (progenitor_3.person.lastName ? progenitor_3.person.lastName : '')"
+                      [ngModelOptions]="{standalone: true}" required>
+                  </mat-form-field>
+                  <mat-form-field fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30"> -->
+                    <mat-select placeholder="Seleccione el Apellido" [ngModelOptions]="{standalone: true}" [(ngModel)]="son.person.lastNames"
+                      (ngModelChange)="changeLastNames($event,'son')">
+                      <mat-option *ngFor="let doc of model.optionsLastName" [value]="doc">
+                        {{ doc.lastName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field *ngIf="son.person.lastNames" fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+
+                    <mat-select placeholder="Seleccione Segundo Apellido" [ngModelOptions]="{standalone: true}"
+                      [(ngModel)]="son.person.secondLastNameOption" (ngModelChange)="changeSecondLastNames($event,'son')">
+                      <ng-container *ngFor="let doc of son.person.lastNames.options">
+                        <mat-option [value]="doc">
+                          {{ doc.secondLastName == '' ? '- Sin Segundo Apellido -' : doc.secondLastName}}
+                        </mat-option>
+                      </ng-container>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <mat-form-field *ngIf="model.noVolunt" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="margin-top: 25px; display: block;font-size: 14px;">
+                  <textarea matInput placeholder="Texto del Fallo" rows="5" [(ngModel)]="observations.failText"
+                    [ngModelOptions]="{standalone: true}" #marginal></textarea>
+                </mat-form-field>
+              </mat-expansion-panel>
+
+              <h5>Documentación</h5>
+              <div style="width: 100%" class="example-container">
+                <mat-table #table [dataSource]="dataSource">
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="Archivo">
+                    <mat-header-cell *matHeaderCellDef> Archivo </mat-header-cell>
+                    <mat-cell *matCellDef="let element" style="margin-right: 10px"> {{element.name}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="Obligatorio">
+                    <mat-header-cell *matHeaderCellDef> Obligatorio </mat-header-cell>
+                    <!-- guardado por las dudas -->
+                    <!-- <mat-cell *matCellDef="let element" style="margin-right: 10px"> {{(element.required && element.code
+                      !=
+                      'LASTNAME_AGREEMENT') ||
+                      (son.person.secondLastNameOption && son.person.secondLastNameOption.type != 'same' &&
+                      element.code ==
+                      'LASTNAME_AGREEMENT') ? 'OBLIGATORIO'
+                      : 'OPCIONAL'}} </mat-cell> -->
+                    <mat-cell *matCellDef="let element" style="margin-right: 10px">{{element.required ? 'OBLIGATORIO'
+                      : 'OPCIONAL'}} </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef> Acción </mat-header-cell>
+                    <mat-cell *matCellDef="let element; let i = index" fxLayoutWrap="wrap">
+                      <!-- <mat-icon matTooltip="Editar!" matTooltipPosition="above" (click)="editMargin(element,i)" style="color:#72d487;cursor:pointer">edit
+                      </mat-icon> -->
+                      <!-- <mat-icon matTooltip="Eliminar!" matTooltipPosition="above" (click)="deleteFiles(element)" style="color:#ff6868;cursor:pointer">delete_forever
+                      </mat-icon> -->
+                      <mat-icon *ngIf="btnDownloadAttach(element)" matTooltip="Descargar Documento!" matTooltipPosition="above"
+                        (click)="downloadDocument(element)" style="color:#459ef1c5;cursor:pointer;font-size:25px;margin:0 5px 0 5px;">file_download
+                      </mat-icon>
+                      <mat-icon *ngIf="element.digitalized && !btnDownloadAttach(element)" matTooltip="Visualizar Documentación Escaneada!"
+                        matTooltipPosition="above" (click)="getDocument(element)" style="color:#4556f1c5;cursor:pointer;font-size: 25px;margin:0 5px 0 5px;">remove_red_eye
+                      </mat-icon>
+                      <mat-icon *ngIf="element.digitalized && element.validAddPage" matTooltip="Adicionar Documentación!"
+                        matTooltipPosition="above" (click)="digitalize(element,true)" style="color:#45f1a9c5;cursor:pointer;font-size: 25px;margin:0 5px 0 5px;">note_add
+                      </mat-icon>
+                      <mat-icon *ngIf="!element.digitalized" matTooltip="Digitalizar Documentación" matTooltipPosition="above"
+                        (click)="digitalize(element)" style="color:#45c9f1c5;cursor:pointer;font-size: 30px;margin:0 5px 0 5px;">scanner
+                      </mat-icon>
+                      <mat-icon *ngIf="element.digitalized" matTooltip="Eliminar Documento Digitalizado!"
+                        matTooltipPosition="above" (click)="deleteFilesDoc(element)" style="color:#f14545c5;cursor:pointer;font-size:25px;margin:0 5px 0 5px;">delete_forever
+                      </mat-icon>
+
+                      <mat-icon *ngIf="!element.digitalized" matTooltip="Adjuntar Archivo!" matTooltipPosition="above"
+                        (click)="addFileAttachment(element)" style="color:#4595f1c5;cursor:pointer;font-size:25px;margin:0 5px 0 5px;">attach_file
+                      </mat-icon>
+                      <!-- </span> -->
+                      <!-- <mat-icon *ngIf="element.documents.length > 0" matTooltip="Tiene Documentos Adjuntos!" matTooltipPosition="above" (click)="addMarginFile(element,i)" style="color:#5645eec5;cursor:pointer">attach_file
+                      </mat-icon> -->
+                      <!-- <sup style="font-size: 10px;font-weight: bold;">{{'('+element.fileCount+')'}}</sup>
+                        <input [id]="'file-input' + i" type="file" name="name" multiple style="display: none;" (change)="uploadFiles($event,element.id,i)"
+                        /> -->
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"></mat-row>
+                </mat-table>
+                <!-- ELEMENTO FILE -->
+                <input [id]="'file-input'" type="file" name="name" style="display: none;" (change)="uploadFilesAttachment($event)" />
+              </div>
+
+              <mat-card fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="documentScanned.base64 && !documentScanned.download"
+                style="margin-top:20px;" fxLayoutWrap="wrap">
+                <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="end start">
+                  <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-button style="margin: 10px 10px 0 0;"
+                    (click)="closePreviewDoc()"><i class="material-icons">
+                      close
+                    </i></button>
+                </div>
+                <app-image-viewer fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="documentScanned.base64 && !documentScanned.download"
+                  [images]="[documentScanned.base64]" [idContainer]="'idOnHTML4'" [loadOnInit]="true"></app-image-viewer>
+              </mat-card>
+              <div style="text-align: right;margin:20px 0 0 0;" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <button mat-raised-button color="primary" (click)="backStep()">Atras</button>
+                <button mat-raised-button color="primary" (click)="updateProcedure(false)">Siguiente</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="sixthFormGroup">
+            <form [formGroup]="sixthFormGroup" fxLayoutWrap="wrap" fxLayout="row">
+              <ng-template matStepLabel>Finalización</ng-template>
+              <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="margin-top: 25px; display: block;font-size: 14px;">
+                <textarea matInput placeholder="Observaciones" rows="5" [(ngModel)]="model.observations"
+                  [ngModelOptions]="{standalone: true}" #marginal></textarea>
+              </mat-form-field>
+              <mat-expansion-panel fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="pdfValidate.pdfDraftBase64"
+                [expanded]="true">
+                <mat-expansion-panel-header>
+                  <strong>Acta</strong>
+                </mat-expansion-panel-header>
+                <app-image-viewer *ngIf="pdfValidate.pdfDraftBase64 && !pdfCertificate.pdfDraftBase64" [images]="[pdfValidate.pdfDraftBase64]"
+                  [idContainer]="'idOnHTML'" [loadOnInit]="true"></app-image-viewer>
+
+                <app-image-viewer *ngIf="pdfCertificate.pdfDraftBase64" [images]="[pdfCertificate.pdfDraftBase64]"
+                  [idContainer]="'idOnHTML2'" [loadOnInit]="true"></app-image-viewer>
+              </mat-expansion-panel>
+              <div style="text-align: right;margin:20px 0 0 0;" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+                <button mat-raised-button color="primary" *ngIf="!finalizado" (click)="backStep()">Atras</button>
+                <button mat-raised-button color="primary" *ngIf="!finalizado" matStepperReset (click)="resetStepper(stepper)">Limpiar</button>
+                <button mat-raised-button color="primary" *ngIf="!finalizado" matStepperReset (click)="updateProcedure(true)">Validar</button>
+                <button mat-raised-button color="primary" *ngIf="validate && !finalizado" matStepperReset (click)="finalizarTramite()">Finalizar</button>
+                <button mat-raised-button color="primary" *ngIf="finalizado" matStepperReset (click)="nextStep()">Continuar
+                  con el Trámite</button>
+                <button mat-raised-button color="primary" *ngIf="finalizado" matStepperReset (click)="backToInbox()">Volver
+                  a la Bandeja</button>
+              </div>
+            </form>
+          </mat-step>
+        </mat-horizontal-stepper>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- column -->
+</div>

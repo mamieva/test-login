@@ -1,0 +1,68 @@
+<h1 mat-dialog-title style="margin-bottom: 10px;"> <b> Certificado Negativo </b>
+</h1>
+<h6 style="margin: 10px 0 10px 0;">Cargue los datos correspondientes al que declara: </h6>
+
+<!-- <mat-card> -->
+<!-- <mat-card-content> -->
+<!-- <strong>Búsq´ueda Por Persona</strong> -->
+<!-- <form #form> -->
+<div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+  <!-- <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+              <input matInput type="number" placeholder="Nº Tomo" [(ngModel)]="volumeNumber" [ngModelOptions]="{standalone: true}" required>
+            </mat-form-field>
+            <mat-form-field fxFlex.gt-sm="20" fxFlex.gt-xs="20" fxFlex="20">
+              <input matInput type="number" placeholder="Nº Folio" [(ngModel)]="folioNumber" [ngModelOptions]="{standalone: true}" required>
+            </mat-form-field> -->
+  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+    <input matInput type="text" placeholder="Apellido" [(ngModel)]="model.bornLastName" [ngModelOptions]="{standalone: true}"
+      required>
+  </mat-form-field>
+  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+    <input matInput type="text" placeholder="Nombre" [(ngModel)]="model.bornFirstName" [ngModelOptions]="{standalone: true}"
+      required>
+  </mat-form-field>
+  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+    <input matInput type="text" placeholder="Apellido Progenitor Nº 1" [(ngModel)]="model.progenitor1LastName"
+      [ngModelOptions]="{standalone: true}" required>
+  </mat-form-field>
+  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+    <input matInput type="text" placeholder="Nombre Progenitor Nº 1" [(ngModel)]="model.progenitor1FirstName"
+      [ngModelOptions]="{standalone: true}" required>
+  </mat-form-field>
+  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+    <input matInput type="text" placeholder="Apellido Progenitor Nº 2" [(ngModel)]="model.progenitor2LastName"
+      [ngModelOptions]="{standalone: true}" required>
+  </mat-form-field>
+  <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+    <input matInput type="text" placeholder="Nombre Progenitor Nº 2" [(ngModel)]="model.progenitor2FirstName"
+      [ngModelOptions]="{standalone: true}" required>
+  </mat-form-field>
+  <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <input matInput type="text" placeholder="Lugar de Nacimiento" [(ngModel)]="model.addressBirth" [ngModelOptions]="{standalone: true}"
+      required>
+  </mat-form-field>
+  <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <input matInput type="date" placeholder="Fecha de Nacimiento" [(ngModel)]="model.birthDate" [ngModelOptions]="{standalone: true}"
+      required>
+  </mat-form-field>
+
+  <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="display: block;font-size: 14px;">
+    <textarea matInput placeholder="En Efecto de" rows="3" [(ngModel)]="model.observationRequest" [ngModelOptions]="{standalone: true}"
+      #observations></textarea>
+  </mat-form-field>
+  <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" style="display: block;font-size: 14px;">
+    <textarea matInput placeholder="Observaciones" rows="3" [(ngModel)]="model.observationCertificate" [ngModelOptions]="{standalone: true}"
+      #observations></textarea>
+  </mat-form-field>
+
+  <!-- <button fxFlex.gt-sm="10" fxFlex.gt-xs="10" fxFlex="10" mat-raised-button color="primary" (click)="getCertificatesByActa()">Buscar</button> -->
+</div>
+<!-- </form> -->
+<!-- </mat-card-content> -->
+<!-- </mat-card> -->
+<div mat-dialog-actions fxLayoutAlign="space-between end">
+  <a [disabled]="!certificate.base64" color="warn" mat-stroked-button id="download" [download]="'Certificado Negativo.pdf'" [href]="'data:application/octet-stream;base64,' + certificate.base64 | todaySafeHtml">
+  Descargar</a>
+  <button mat-stroked-button color="primary" (click)="generateNegative()">Generar Certificado</button>
+  <button mat-button [mat-dialog-close]="data.id" cdkFocusInitial>Cerrar</button>
+</div>

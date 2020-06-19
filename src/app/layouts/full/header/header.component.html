@@ -1,0 +1,26 @@
+<!-- ============================================================== -->
+<!-- Profile - style you can find in header.scss -->
+<!-- ============================================================== -->
+<div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="start end">
+  <div fxFlex.gt-sm="40" fxFlex.gt-xs="40" fxFlex="40">
+    <img style="height:40px;" src="../../../../assets/images/logo_trans.png">
+  </div>
+  <!-- <img [src]="'data:image;base64,' + currentUser.photoBase64 | safeHtml" alt="user" class="profile-pic"> -->
+</div>
+
+
+
+<mat-menu #profile="matMenu" class="mymegamenu">
+  <button mat-menu-item>
+    <mat-icon>settings</mat-icon> Settings
+  </button>
+  <button mat-menu-item>
+    <mat-icon>account_box</mat-icon> Profile
+  </button>
+  <button mat-menu-item>
+    <mat-icon>notifications_off</mat-icon> Disable notifications
+  </button>
+  <button mat-menu-item>
+    <mat-icon>exit_to_app</mat-icon> Sign Out
+  </button>
+</mat-menu>

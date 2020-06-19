@@ -1,0 +1,60 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header" style="text-align: center">
+            <h4 class="title">Firma Digital</h4>
+          </div>
+          <div *ngIf="!user.options" style="text-align: center;">
+            <div style="width: 100%; text-align: center">
+              <!-- <div style="text-align: center"> -->
+              <img id="imgCipe" style="position: relative" height="125px" src="../../assets/images/cipe.png" alt="CIPE 3.0">
+              <span style="width: 100%; display: block;">
+                Inserte su CIPE 3.0
+              </span>
+            </div>
+            <div class="inserte_cipe{{look}}"></div>
+            <!--<button class="btn_continuar" (click)="getCertificates()"></button>-->
+            <button (click)="getCertificates()" mat-button color="primary">Continuar</button>
+          </div>
+          <div *ngIf="readingCertificates" style="text-align: center;">
+            <label>Leyendo CIPE, Espere Por Favor...</label>
+          </div>
+          <div *ngIf="read" style="text-align: center;">
+            <div class="inserte_cipe{{look}}"></div>
+            <button class="btn_continuar" (click)="getCertificates()"></button>
+          </div>
+          <div class="card-content" *ngIf="user.options">
+            <form name="form" (ngSubmit)="f.form.valid && validatePIN()" #f="ngForm" novalidate>
+              <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+                <label for="username">Certificado</label>
+                <select [(ngModel)]="model.username" name="username" #username="ngModel" class="form-control">
+                  <option *ngFor="let opt of user.options" [value]="opt.key">{{opt.value}}</option>
+                </select>
+              </div>
+              <mat-form-field style="margin-top: 5px;">
+                <input matInput placeholder="Contraseña" [(ngModel)]="model.password" [ngModelOptions]="{standalone: true}"
+                  [type]="hide ? 'text' : 'password'">
+                <mat-icon matSuffix (mousedown)="hide = true" (mouseup)="hide = false">{{hide ? 'visibility_off' :
+                  'visibility'}}</mat-icon>
+              </mat-form-field>
+              <div class="form-group" fxLayoutAlign="end center">
+                <button *ngIf="!firmando" mat-button color="primary">Firmar y Enviar Trámite</button>
+                <!-- <button [disabled]="loading" class="btn btn-primary" [class.look-black]="look=='BLACK'">Firmar y Enviar Trámite</button> -->
+
+                <!-- <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/> -->
+              </div>
+            </form>
+            <div class="form-group" fxLayoutAlign="center center">
+              <mat-spinner *ngIf="firmando" diameter="40"></mat-spinner>
+              <!-- <button [disabled]="loading" class="btn btn-primary" [class.look-black]="look=='BLACK'">Firmar y Enviar Trámite</button> -->
+
+              <!-- <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

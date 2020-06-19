@@ -1,0 +1,24 @@
+.dialog-list {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+mat-row:nth-child(even) {
+  background-color: #f4f6f7;
+}
+
+mat-row:nth-child(odd) {}
+
+mat-row:hover{
+  background-color: #adc7dda4;
+}
+mat-header-row {
+  font-size: 13px;
+  border-bottom: 1px solid #1e88e5;
+}
+mat-header-cell{
+  font-size: 13px;
+}
+.mat-column-Numero{
+  flex: 0 0 80px;
+}

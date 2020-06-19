@@ -1,0 +1,103 @@
+<div class="wrapper wrapper-full-page">
+    <nav class="navbar navbar-primary navbar-transparent navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-example">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- <a class="navbar-brand" href="/#/dashboard">Salud 3.0</a> -->
+            </div>
+        </div>
+    </nav>
+    <div class="full-page login-page" filter-color="black">
+        <div class="content" style="padding-top:0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-md-offset-3 col-sm-offset-3" style="padding: 30px 0 60px 0;border-radius: 1%;background-color: rgba(255,255,255,0.4);">
+                        <img class="col-md-6 col-md-offset-3" src="../../../assets/img/gobierno_top.png" style="margin-bottom: 40px;"alt="">
+                        <div class="col-md-8 col-sm-6 col-md-offset-2">
+                            <form name="form" (ngSubmit)="f.form.valid && validatePIN()" #f="ngForm" novalidate>
+                                <div class="card card-login card-hidden">
+                                    <div class="card-header text-center" data-background-color="red">
+                                        <h4 class="card-title">{{title}}</h4>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="form-row text-center">
+                                            <div class="form-group form-black is-empty" style="display: inline-block;">
+                                                <!-- label for="phone" class="control-label">Usuario</label -->
+                                                <div class="dropdown">
+                                                    <button href="#pablo" class="dropdown-toggle btn btn-primary btn-round btn-block" style="padding-right: 90px;" (click)="readAgain()">{{currentOption}}
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-left" style="cursor: pointer;">
+                                                        <li *ngFor="let o of options">
+                                                            <div (click)="changeOption(o)">{{o.value}}</div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">lock_outline</i>
+                                            </span>
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Contraseña</label>
+                                                <input type="password" class="form-control" [(ngModel)]="model.password" name="password" #password="ngModel" (keydown.enter)="validatePIN()" required>
+                                            </div>
+                                            <div class="help-block" style="color: red;" *ngIf="attempts >= 0">PIN Incorrecto, le quedan: {{attempts}} intentos</div>
+                                        </div>
+                                    </div>
+                                    <div class="footer text-center">
+                                        <button type="submit" class="btn btn-primary btn-simple btn-wd btn-lg">Ingresar</button>
+                                        <button class="btn btn-simple btn-wd btn-lg" (click)="goToLoginWithoutCIPE()">Ingreso con contraseña temporal</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <img class="col-md-8 col-md-offset-2" src="../../../assets/img/gobierno_footer.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <!-- nav class="pull-left">
+                    <ul>
+                        <li>
+                            <a href="#">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Company
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Portfolio
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Blog
+                            </a>
+                        </li>
+                    </ul>
+                </nav -->
+                <p class="copyright pull-right">
+                    <!-- &copy;
+                    {{test | date: 'yyyy'}}
+                    <a href="https://www.creative-tim.com">Creative Tim</a>, made with love for a better web
+                    -->
+                    {{'v' + appVersion + (apiVersion ? '-' + apiVersion : '')}}
+                </p>
+            </div>
+        </footer>
+        <div class="full-page-background" style="background-image: url(../../../assets/img/login.png) "></div>
+    </div>
+</div>

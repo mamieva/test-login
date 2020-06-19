@@ -1,0 +1,35 @@
+
+<h1 mat-dialog-title>Nueva Persona</h1>
+<div mat-dialog-content>
+  <!-- <p>Ingrese los datos</p> -->
+  <div fxLayoutWrap="wrap" fxLayout="row" fxLayoutAlign="space-between start">
+    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+      <input matInput placeholder="Apellido/s" [(ngModel)]="lastName" required [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+      <input matInput placeholder="Nombre/s" [(ngModel)]="mmaa" [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+      <input matInput placeholder="Apellido/s" [(ngModel)]="lastName" required [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+      <input matInput placeholder="Nombre/s" [(ngModel)]="mmaa" [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+      <input matInput placeholder="Apellido/s" [(ngModel)]="lastName" required [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+      <input matInput placeholder="Nombre/s" [(ngModel)]="mmaa" [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+      <input matInput placeholder="Apellido/s" [(ngModel)]="lastName" required [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+    <mat-form-field fxFlex.gt-sm="45" fxFlex.gt-xs="45" fxFlex="45">
+      <input matInput placeholder="Nombre/s" [(ngModel)]="mmaa" [ngModelOptions]="{standalone: true}">
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Ok</button>
+</div>

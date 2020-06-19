@@ -1,0 +1,31 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- <mat-card> -->
+  <div style="margin: 20px 0 0 0;" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <span *ngIf="data.actionDialog == 'RECHAZAR'">Seleccione la Tarea a la que desea Regresar el Trámite</span>
+    <span *ngIf="data.actionDialog == 'ANULAR'">Ingrese el Motivo de Anulación</span>
+    <span *ngIf="data.actionDialog == 'RECHAZAR_OPOSICION'">Ingrese el Motivo del Rechazo a la Oposición</span>
+    <span *ngIf="data.actionDialog == 'DESESTIMAR_OPOSICION'">Ingrese el Motivo de la Desestimación a la Oposición</span>
+    <span *ngIf="data.actionDialog == 'APROBAR_OPOSICION'">Ingrese el Motivo de la Aprobación a la Oposición</span>
+  </div>
+  <div *ngIf="data.actionDialog == 'RECHAZAR'" style="margin: 20px 0 0 0;" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+      <mat-select placeholder="Tarea" [(ngModel)]="rejectTask" [ngModelOptions]="{standalone: true}" required>
+        <mat-option *ngFor="let sec of data.tasks.previous" [value]="sec">
+          {{ sec.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div style="margin: 10px 0 0 0;" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+      <textarea required matInput [placeholder]="data.actionDialog == 'RECHAZAR'?'Observaciones': 'Motivo'"
+        rows="3" [(ngModel)]="rejectTask.observations" [ngModelOptions]="{standalone: true}" #observations></textarea>
+    </mat-form-field>
+  </div>
+  <div style="margin: 20px 0 0 0; text-align: right;" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+    <button (click)="onNoClick()" mat-button color="primary">Cancelar</button>
+    <button (click)="postReject()" mat-raised-button color="warn">Aceptar</button>
+  </div>
+
+  <!-- </mat-card> -->
+</div>

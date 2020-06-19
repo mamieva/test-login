@@ -1,0 +1,52 @@
+/*
+Template Name: Material Pro Admin
+Author: Themedesigner
+Email: niravjoshi87@gmail.com
+File: scss
+*/
+/**
+ * Table Of Content
+ *
+ * 	1. Globals
+ *	2. Headers
+ *	3. Navigations
+ *	4. Banners
+ *	5. Footers
+ *	6. app
+ *	7. Widgets
+ *	8. Custom Templates
+ */
+
+@import 'variable';
+
+@import 'spinner';
+@import 'app';
+@import 'header';
+@import 'pages';
+@import 'sidebar';
+@import 'responsive';
+
+
+.infoImportante {
+  border: 5px solid $info;
+}
+
+// .login>div>div>div>span>label {
+//   color: white !important;
+// }
+
+// .login>div>.mat-form-field-underline {
+//   background-color: white !important;
+// }
+.fullpage{
+  height: calc(100vh + 10px);
+}
+.button-label{
+  font-size: 12px;
+}
+.register{
+  margin-top: 50px;
+}
+.fondo-der{
+  background: url("../images/thumb-1920-1039991.jpg");
+}

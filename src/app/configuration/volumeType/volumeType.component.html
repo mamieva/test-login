@@ -1,0 +1,66 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" *ngIf="model.id" fxLayoutWrap="wrap">
+    <mat-card *ngIf="volumeTypeId" fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+      <mat-card-content>
+        <div fxFlex.gt-sm="70" fxFlex.gt-xs="70" fxFlex="70">
+          <span style="display: block;width:100%;">
+            <b>Tipo de Acta: </b> {{ model.certificateType.name}}
+          </span>
+          <span *ngIf="model.year" style="display: block;width:100%;">
+            <b>Año: </b> {{' ' + model.year}}
+          </span>
+          <span *ngIf="model.volumeType" style="display: block;width:100%;">
+            <b>Tipo de Tomo: </b> {{' ' + model.volumeType.name}}
+          </span>
+          <!-- <span style="display: block;width:100%;">
+            <b>Estado: </b> {{' ' + model.statusLabel}}
+          </span> -->
+          <!-- <ng-container *ngFor="let version of model.versions">
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Editado por: </b> {{' ' + version.modifiedBy + ' - ' }}{{version.dateModified|date: 'dd/MM/yyyy
+              HH:mm:ss'}}
+            </span>
+            <span style="display: block;width:100%;" *ngIf="version.currentVersion">
+              <b>Versión: </b> {{' ' + version.id}}
+            </span>
+          </ng-container> -->
+        </div>
+
+        <div fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" fxLayoutAlign="center center" fxLayoutWrap="wrap">
+          <button fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" mat-raised-button color="primary" (click)="updatevolumeType()"
+            style="margin-top:10px">
+            Actualizar
+          </button>
+          <button fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" mat-raised-button color="primary" (click)="backPage()"
+            style="margin-top:10px">
+            Volver
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+      <mat-card-content>
+
+        <mat-form-field fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
+          <mat-select placeholder="Tipo de Tomos" [(ngModel)]="model.volumeType.id" [ngModelOptions]="{standalone: true}"
+            required>
+            <mat-option *ngFor="let sec of volumesTypes" [value]="sec.id">
+              {{ sec.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+    <!-- <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100" fxLayoutAlign="space-between end" fxLayoutWrap="wrap">
+      <button fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" mat-raised-button color="primary" (click)="backPage()"
+        style="margin-top:10px">
+        Volver
+      </button>
+      <button fxFlex.gt-sm="30" fxFlex.gt-xs="30" fxFlex="30" mat-raised-button color="primary" (click)="updatevolumeType()"
+        style="margin-top:10px">
+        Actualizar
+      </button>
+
+    </div> -->
+  </div>
+</div>
